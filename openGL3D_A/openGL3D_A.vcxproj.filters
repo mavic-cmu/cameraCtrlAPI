@@ -33,16 +33,7 @@
     <ClCompile Include="ysglfontdata.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="yssimplesound_dsound.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="yssimplesound.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="OrbitingViewer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="flyThrough.cpp">
+    <ClCompile Include="testCameraCtrlMain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -63,12 +54,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ysglfontdata.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="yssimplesound.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="OrbitingViewer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

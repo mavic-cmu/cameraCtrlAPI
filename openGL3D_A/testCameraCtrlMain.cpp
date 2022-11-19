@@ -9,12 +9,7 @@
 int main(void)
 {
 	bool terminate = false;
-	double vx, vy, vz;
 	Camera3D camera;
-
-	camera.z = 10.0;
-	camera.y = 5.0;
-	camera.farZ = 400.0;
 
 	FsOpenWindow(16, 16, 800, 600, 1);
 
@@ -37,33 +32,32 @@ int main(void)
 			break;
 		}
 
-		// note that key state returns true if it is pressed
-		// and I want to capture simultaneous presses
-
 		if (FsGetKeyState(FSKEY_LEFT))
-			camera.h += Camera3D::PI / 180.0;
+			camera.changeCameraRotation(MOVE_YAW, 1.0);
 
 		if (FsGetKeyState(FSKEY_RIGHT))
-			camera.h -= Camera3D::PI / 180.0;
+			camera.changeCameraRotation(MOVE_YAW, -1.0);
 
 		if (FsGetKeyState(FSKEY_UP))
-			camera.p -= Camera3D::PI / 180.0;
+			camera.changeCameraRotation(MOVE_PITCH, 1.0);
 
 		if (FsGetKeyState(FSKEY_DOWN))
-			camera.p += Camera3D::PI / 180.0;
+			camera.changeCameraRotation(MOVE_PITCH, -1.0);
 
-		if (FsGetKeyState(FSKEY_F)) {
-			camera.getForwardVector(vx, vy, vz);
-			camera.x += vx * 0.5;
-			camera.y += vy * 0.5;
-			camera.z += vz * 0.5;
+		if (FsGetKeyState(FSKEY_W)) {
+			camera.changeCameraTransition(MOVE_FORWARD, 0);
 		}
-		if (FsGetKeyState(FSKEY_B)) {
-			camera.getForwardVector(vx, vy, vz);
-			camera.x -= vx * 0.5;
-			camera.y -= vy * 0.5;
-			camera.z -= vz * 0.5;
+		if (FsGetKeyState(FSKEY_S)) {
+			camera.changeCameraTransition(MOVE_BACKWARD, 0);
 		}
+
+		if (FsGetKeyState(FSKEY_A)) {
+			camera.changeCameraTransition(MOVE_LEFT, 0);
+		}
+		if (FsGetKeyState(FSKEY_D)) {
+			camera.changeCameraTransition(MOVE_RIGHT, 0);
+		}
+
 
 		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
@@ -98,8 +92,8 @@ int main(void)
 		glColor3ub(120, 255, 120);
 		DrawingUtilNG::drawCube({ 80, 0, -70 }, { 90, 15, -30 }, true);
 
-		glColor3ub(120, 255, 120);
-		DrawingUtilNG::drawSphere({ 50, 0, 50 }, 10);
+		//glColor3ub(120, 255, 120);
+		//DrawingUtilNG::drawSphere({ 50, 0, 50 }, 10);
 
 		// draw axes (x is red, y is green, z is blue, like in all drawing software)
 		glLineWidth(8);
@@ -131,15 +125,8 @@ int main(void)
 		glDisable(GL_DEPTH_TEST);
 
 		comicsans.setColorHSV(0, 1, 1);
-		comicsans.drawText("I'm Flying!", 10, 60, .25);
-		std::string data;
-		data = "X=" + std::to_string(camera.x) + " Y=" + std::to_string(camera.y) + " Z=" + std::to_string(camera.z);
-		comicsans.setColorHSV(300, 1, .5);
-		comicsans.drawText(data, 10, 80, .15);
+		comicsans.drawText("Testing Camera control APIs!", 10, 60, .25);
 
-		data = "Camera Orientation: h=" + std::to_string(camera.h * 45. / atan(1.))
-			+ " deg, p=" + std::to_string(camera.p * 45. / atan(1.)) + " deg";
-		comicsans.drawText(data, 10, 95, .15);
 
 		FsSwapBuffers();
 		FsSleep(10);
