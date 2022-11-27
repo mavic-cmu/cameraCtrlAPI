@@ -14,7 +14,6 @@ using namespace std;
 
 int main(void)
 {
-
 	int mouseEvent = 0, leftButton = 0, middleButton = 0, rightButton = 0,
 		screenX = 0, screenY = 0;
 
@@ -51,6 +50,7 @@ int main(void)
 			cout << "delete one key frame" << endl;
 			break;
 		case FSKEY_R:
+			// reset to initial camera pos
 			cameraController.resetCameraInitPos();
 		}
 
@@ -79,7 +79,6 @@ int main(void)
 		if (FsGetKeyState(FSKEY_D)) {
 			cameraController.onKeyBoardPress(MOVE_RIGHT);
 		}
-
 
 		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
@@ -152,14 +151,12 @@ int main(void)
 
 		//display coords of mouse
 		if (leftButton && mouseEvent == FSMOUSEEVENT_MOVE) { // write coords on screen if left button is held down
-			//coordStream.str("");  // reset stream
-			//coordStream.precision(4);
-			//coordStream << " (" << screenX << ", " << screenY << ")";
-			//comicsans.setColorHSV(0, 1, 1);
-			//comicsans.drawText(coordStream.str().c_str(), screenX, screenY - 3, .25);
+			coordStream.str("");  // reset stream
+			coordStream.precision(4);
+			coordStream << " (" << screenX << ", " << screenY << ")";
+			comicsans.setColorHSV(0, 1, 1);
+			comicsans.drawText(coordStream.str().c_str(), screenX, screenY - 3, .10);
 			cameraController.onMouseClick(screenX, screenY);
-
-
 		}
 
 		FsSwapBuffers();
