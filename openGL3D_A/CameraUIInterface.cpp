@@ -8,6 +8,11 @@ void CameraUserController::resetCameraInitPos(void) {
 	camera.resetCameraPos();
 }
 
+void CameraUserController::setCameraToPos(Campos pos)
+{
+	camera.setCameraPosition(pos);
+}
+
 void CameraUserController::onKeyBoardPress(CamMoveDirct direction)
 {
 	double vx, vy, vz;

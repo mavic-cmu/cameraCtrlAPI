@@ -14,6 +14,7 @@ public:
 	void addCameraKeyFrame(void);
 	void deleteCameraKeyFrame(void);
 	void resetCameraInitPos(void);
+	void setCameraToPos(Campos pos);
 	std::string getCurrCameraParameterString(void);
 
 };
