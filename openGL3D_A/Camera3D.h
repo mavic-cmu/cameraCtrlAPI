@@ -1,4 +1,5 @@
 #pragma once
+#include <string>
 #include <vector>
 #include "fssimplewindow.h"
 
@@ -60,7 +61,7 @@ public:
 	int saveCurrentKeyFrame();
 	int deleteKeyFrame();    // only delete the last keyFrame
 	int getCameraKeyFrames(std::vector<Campos>& keyFrames);
-
+	std::string posToString(Campos camera);
 	/**
 	 * draw a 3D camera block in the 3D world base on current camera position
 	 *

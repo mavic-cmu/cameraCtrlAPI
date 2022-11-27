@@ -1,4 +1,6 @@
 #include <math.h>
+#include <sstream>
+#include <string>
 #include "Camera3D.h"
 #include "fssimplewindow.h"
 #include "DrawingUtilNG.h"
@@ -187,6 +189,18 @@ int Camera3D::getCameraKeyFrames(std::vector<Campos>& camerakeyFrames)
 	return 0;
 }
 
+std::string Camera3D::posToString(Campos camera) {
+	std::stringstream coordStream;
+	coordStream.precision(4);
+	coordStream << " x: " << camera.x
+		<< " y: " << camera.y
+		<< " z: " << camera.z
+		<< " roll: " << camera.roll * 45. / atan(1.)
+		<< " pitch: " << camera.pitch * 45. / atan(1.)
+		<< " yaw: " << camera.yaw * 45. / atan(1.);
+
+	return coordStream.str().c_str();
+}
 
 void Camera3D::drawCamera(Campos camera)
 {
@@ -272,3 +286,6 @@ int Camera3D::drawKeyFrameCamPos()
 
 	return 0;
 }
+
+
+

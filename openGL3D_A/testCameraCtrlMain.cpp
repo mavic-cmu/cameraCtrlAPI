@@ -45,27 +45,25 @@ int main(void)
 			cameraController.addCameraKeyFrame();
 			cout << "Add one key frame" << endl;
 			break;
-		case FSKEY_SHIFT:
+		case FSKEY_ALT:
 			cameraController.deleteCameraKeyFrame();
 			cout << "delete one key frame" << endl;
 			break;
 		case FSKEY_R:
 			// reset to initial camera pos
 			cameraController.resetCameraInitPos();
+			break;
+		case FSKEY_G:
+			// get and print key frames coordinates
+			vector<Campos> keyFrames;
+			cameraController.camera.getCameraKeyFrames(keyFrames);
+			for (auto frame : keyFrames) {
+				cout << cameraController.camera.posToString(frame) << endl;
+			}
+			break;
 		}
 
-		if (FsGetKeyState(FSKEY_LEFT))
-			cameraController.camera.changeCameraRotation(MOVE_YAW, 1.0);
-
-		if (FsGetKeyState(FSKEY_RIGHT))
-			cameraController.camera.changeCameraRotation(MOVE_YAW, -1.0);
-
-		if (FsGetKeyState(FSKEY_UP))
-			cameraController.camera.changeCameraRotation(MOVE_PITCH, 1.0);
-
-		if (FsGetKeyState(FSKEY_DOWN))
-			cameraController.camera.changeCameraRotation(MOVE_PITCH, -1.0);
-
+		// use W, S or mouse wheel to move forward and backward
 		if (FsGetKeyState(FSKEY_W) || key == FSKEY_WHEELUP) {
 			cameraController.onKeyBoardPress(MOVE_FORWARD);
 		}
@@ -147,7 +145,7 @@ int main(void)
 		comicsans.setColorHSV(0, 1, 1);
 		comicsans.drawText("Testing Camera control APIs!", 10, 60, .25);
 		std::string data;
-		comicsans.drawText(cameraController.getCameraParameterString(), 10, 95, .15);
+		comicsans.drawText(cameraController.getCurrCameraParameterString(), 10, 95, .15);
 
 		//display coords of mouse
 		if (leftButton && mouseEvent == FSMOUSEEVENT_MOVE) { // write coords on screen if left button is held down

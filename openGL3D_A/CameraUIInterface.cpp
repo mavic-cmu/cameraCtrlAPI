@@ -117,16 +117,7 @@ void CameraUserController::deleteCameraKeyFrame(void)
 	camera.deleteKeyFrame();
 }
 
-string CameraUserController::getCameraParameterString(void)
+string CameraUserController::getCurrCameraParameterString(void)
 {
-	stringstream coordStream;
-	coordStream.precision(4);
-	coordStream << " x: " << camera.currCameraPos.x
-		<< " y: " << camera.currCameraPos.y
-		<< " z: " << camera.currCameraPos.z
-		<< " roll: " << camera.currCameraPos.roll * 45. / atan(1.)
-		<< " pitch: " << camera.currCameraPos.pitch * 45. / atan(1.)
-		<< " yaw: " << camera.currCameraPos.yaw * 45. / atan(1.);
-
-	return coordStream.str().c_str();
+	return camera.posToString(camera.currCameraPos);
 }
