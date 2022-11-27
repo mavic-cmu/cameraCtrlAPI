@@ -26,6 +26,10 @@ int main(void)
 	ComicSansFont comicsans;
 	stringstream coordStream;     // for displaying coordinates on screen
 
+	bool isDisPlayMode = false;
+	static int displayedFrameCnt = 0;
+	vector<Campos> keyFrames;
+
 	while (!terminate)
 	{
 		FsPollDevice();
@@ -55,11 +59,16 @@ int main(void)
 			break;
 		case FSKEY_G:
 			// get and print key frames coordinates
-			vector<Campos> keyFrames;
 			cameraController.camera.getCameraKeyFrames(keyFrames);
 			for (auto frame : keyFrames) {
 				cout << cameraController.camera.posToString(frame) << endl;
 			}
+			break;
+		case FSKEY_P:
+			// play mode, to play viewer based on keyFrames
+			isDisPlayMode = !isDisPlayMode;
+			cameraController.camera.getCameraKeyFrames(keyFrames);
+			cout << " isDisPlayMode " << isDisPlayMode;
 			break;
 		}
 
@@ -157,8 +166,21 @@ int main(void)
 			cameraController.onMouseClick(screenX, screenY);
 		}
 
+		//play mode
+		if (isDisPlayMode && displayedFrameCnt < keyFrames.size()) {
+			Campos frame = keyFrames.at(displayedFrameCnt);
+			cameraController.setCameraToPos(frame);
+			cout << cameraController.camera.posToString(frame) << endl;
+			FsSleep(100);
+		}
+		else if (isDisPlayMode == false || displayedFrameCnt == keyFrames.size() - 1) {
+			displayedFrameCnt = 0;
+		}
+
 		FsSwapBuffers();
 		FsSleep(10);
+
+		displayedFrameCnt++;
 	}
 
 	return 0;
