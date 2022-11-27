@@ -126,6 +126,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Camera3D.cpp" />
+    <ClCompile Include="CameraUIInterface.cpp" />
     <ClCompile Include="DrawingUtilNG.cpp" />
     <ClCompile Include="testCameraCtrlMain.cpp" />
     <ClCompile Include="fssimplewindow.cpp" />
@@ -135,6 +136,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera3D.h" />
+    <ClInclude Include="CameraUIInterface.h" />
     <ClInclude Include="DrawingUtilNG.h" />
     <ClInclude Include="fssimplewindow.h" />
     <ClInclude Include="GraphicFont.h" />

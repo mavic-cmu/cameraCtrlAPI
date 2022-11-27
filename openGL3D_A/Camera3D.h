@@ -1,27 +1,39 @@
 #pragma once
 #include <vector>
+#include "fssimplewindow.h"
+
 
 typedef struct {
-	double x;
-	double y;
-	double z;
-	double h;
-	double p;
-	double b;
+	float x;
+	float y;
+	float z;
+	float yaw;
+	float pitch;
+	float roll;
+	float nearZ; // nearest viewpoint
+	float farZ;
 } Campos;
 
 enum CamMoveDirct {
+	NO_MOVE,
 	MOVE_FORWARD,
 	MOVE_BACKWARD,
 	MOVE_LEFT,
 	MOVE_RIGHT,
 	MOVE_ROLL,
 	MOVE_PITCH,
-	MOVE_YAW
+	MOVE_YAW,
+	ZOOM_IN,
+	ZOOM_OUT
 };
 
 class Camera3D
 {
+private:
+
+	void drawCamera(Campos camera);
+	GLuint cameraTextureID;
+
 public:
 	static const double PI;
 	double fov, nearZ, farZ;
@@ -37,6 +49,7 @@ public:
 	void setUpCameraTransformation();
 
 	void getForwardVector(double& vx, double& vy, double& vz);
+	void getHorizonMoveVector(double& vx, double& vy, double& vz);
 
 	void setInitCamraPos(double x, double y, double z, double roll, double pitch, double yaw);
 	void resetCameraPos(void);
