@@ -1,3 +1,10 @@
+/*****************************************************************//**
+ * \file   CameraUIInterface.cpp
+ * \brief
+ *
+ * \author chenw
+ * \date   November 2022
+ *********************************************************************/
 #include "CameraUIInterface.h"
 #include <string>
 #include <sstream>
@@ -32,17 +39,21 @@ void CameraUserController::onKeyBoardPress(CamMoveDirct direction)
 		camera.currCameraPos.y -= vy * 1 + 0.1;
 		camera.currCameraPos.z -= vz * 1 + 0.1;
 		break;
-	case MOVE_LEFT:
-		camera.getHorizonMoveVector(vx, vy, vz);
-		camera.currCameraPos.x -= vx * 1 + 0.1;
-		//camera.currCameraPos.y += vy * 1 + 0.1;
-		camera.currCameraPos.z -= vz * 1 + 0.1;
-		break;
 	case MOVE_RIGHT:
 		camera.getHorizonMoveVector(vx, vy, vz);
 		camera.currCameraPos.x += vx * 1 + 0.1;
-		//camera.currCameraPos.y -= vy * 1 + 0.1;
 		camera.currCameraPos.z += vz * 1 + 0.1;
+		break;
+	case MOVE_LEFT:
+		camera.getHorizonMoveVector(vx, vy, vz);
+		camera.currCameraPos.x -= vx * 1 + 0.1;
+		camera.currCameraPos.z -= vz * 1 + 0.1;
+		break;
+	case MOVE_UP:
+		camera.currCameraPos.y += 0.5;
+		break;
+	case MOVE_DOWN:
+		camera.currCameraPos.y -= 0.5;
 		break;
 	}
 
@@ -51,8 +62,6 @@ void CameraUserController::onKeyBoardPress(CamMoveDirct direction)
 
 void CameraUserController::onMouseClick(int x, int y)
 {
-
-	//CamMoveDirct direction = MOVE_ROLL;
 	float rollSign = 1.0;
 	float pitchSign = 1.0;
 	float yawSign = 1.0;
@@ -91,18 +100,6 @@ void CameraUserController::onMouseClick(int x, int y)
 		camera.currCameraPos.yaw += yawSign * (Camera3D::PI / 180.0);
 	}
 
-	//std::cout << "deltaX " << x - preMousePosX << " deltaY " << y - preMousePosY << std::endl;
-	//switch (direction) {
-	//case MOVE_ROLL:
-	//	camera.currCameraPos.b += sign * (Camera3D::PI / 180.0);
-	//	break;
-	//case MOVE_PITCH:
-	//	camera.currCameraPos.p += sign * (Camera3D::PI / 180.0 / 4);
-	//	break;
-	//case MOVE_YAW:
-	//	camera.currCameraPos.h += sign * (Camera3D::PI / 180.0);
-	//	break;
-	//}
 	preMousePosX = x;
 	preMousePosY = y;
 }

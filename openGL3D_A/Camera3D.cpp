@@ -1,3 +1,10 @@
+/*****************************************************************//**
+ * \file   Camera3D.cpp
+ * \brief
+ *
+ * \author chenw
+ * \date   November 2022
+ *********************************************************************/
 #include <math.h>
 #include <sstream>
 #include <string>
@@ -90,9 +97,15 @@ void Camera3D::getForwardVector(double& vx, double& vy, double& vz)
 
 void Camera3D::getHorizonMoveVector(double& vx, double& vy, double& vz)
 {
-	vx = -cos(currCameraPos.pitch) * cos(currCameraPos.yaw);
-	vy = sin(currCameraPos.pitch);
-	vz = -cos(currCameraPos.pitch) * sin(currCameraPos.yaw);
+	getForwardVector(vx, vy, vz);
+	DrawingUtilNG::vertexF upVector = { 0., 1., 0. };
+	DrawingUtilNG::vertexF forwardVector = { vx, vy, vz };
+	DrawingUtilNG::vertexF horizonVector = { 0, 0, 0 };
+	horizonVector = DrawingUtilNG::crossProduct(forwardVector, upVector);
+
+	vx = horizonVector.x;
+	vy = horizonVector.y;
+	vz = horizonVector.z;
 }
 
 void Camera3D::setInitCamraPos(double x, double y, double z, double roll, double pitch, double yaw)
@@ -120,50 +133,6 @@ int Camera3D::setCameraPosition(Campos position)
 {
 	currCameraPos = position;
 	return 0;
-}
-
-void Camera3D::changeCameraTransition(CamMoveDirct direction, float speed)
-{
-	double vx, vy, vz;
-
-
-	switch (direction) {
-	case MOVE_FORWARD:
-		getForwardVector(vx, vy, vz);
-		currCameraPos.x += vx * 1 + 0.1;
-		currCameraPos.y += vy * 1 + 0.1;
-		currCameraPos.z += vz * 1 + 0.1;
-		break;
-	case MOVE_BACKWARD:
-		getForwardVector(vx, vy, vz);
-		currCameraPos.x -= vx * 1 + 0.1;
-		currCameraPos.y -= vy * 1 + 0.1;
-		currCameraPos.z -= vz * 1 + 0.1;
-		break;
-	case MOVE_LEFT:
-		currCameraPos.x += vx * 2 + 0.1;
-		currCameraPos.y -= vy * 2 + 0.1;
-		break;
-	case MOVE_RIGHT:
-		currCameraPos.x -= vx * 2 + 0.1;
-		currCameraPos.y += vy * 2 + 0.1;
-		break;
-	}
-}
-
-void Camera3D::changeCameraRotation(CamMoveDirct direction, float sign)
-{
-	switch (direction) {
-	case MOVE_ROLL:
-		currCameraPos.roll += sign * (Camera3D::PI / 180.0);
-		break;
-	case MOVE_PITCH:
-		currCameraPos.pitch += sign * (Camera3D::PI / 180.0 / 4);
-		break;
-	case MOVE_YAW:
-		currCameraPos.yaw += sign * (Camera3D::PI / 180.0);
-		break;
-	}
 }
 
 int Camera3D::saveCurrentKeyFrame()

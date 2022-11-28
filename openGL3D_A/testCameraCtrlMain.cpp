@@ -1,3 +1,11 @@
+/*****************************************************************//**
+ * \file   testCameraCtrlMain.cpp
+ * \brief  main function to create 3D world to test camera control APIs
+ * 
+ * \author chenw
+ * \date   November 2022
+ *********************************************************************/
+
 #include <stdio.h>
 #include <math.h>
 #include <string>
@@ -11,6 +19,26 @@
 #include "GraphicFont.h"
 
 using namespace std;
+
+void showMenu()
+{
+	cout << "\n\n";
+	cout << "Use these keys on the screen:" << endl;
+	cout << "    Click left button of mouse to change the Pitch and Yaw of the camera view" << endl;
+	cout << "    Use mouse wheel to move forward to backword,(zoom in, zoom out)" << endl;
+	cout << "    W / S: Move up and down along y axis" << endl;		// PS04
+	cout << "    A / D : Move left and right along z axis" << endl;			// PS04
+	cout << endl;
+
+	cout << "    R : reset to inital position" << endl;
+	cout << "    P : Play mode, to play according to camera keyframes" << endl;
+
+	cout << "    SPACE : Save current camera position as key frame" << endl;
+	cout << "    ALT : Delete last positon from key frames" << endl;
+
+	cout << "    ESC : exit program" << endl;
+}
+
 
 int main(void)
 {
@@ -30,6 +58,7 @@ int main(void)
 	static int displayedFrameCnt = 0;
 	vector<Campos> keyFrames;
 
+	showMenu();
 	while (!terminate)
 	{
 		FsPollDevice();
@@ -72,14 +101,23 @@ int main(void)
 			break;
 		}
 
-		// use W, S or mouse wheel to move forward and backward
-		if (FsGetKeyState(FSKEY_W) || key == FSKEY_WHEELUP) {
+		// use mouse wheel to move forward and backward
+		if (key == FSKEY_WHEELUP) {
 			cameraController.onKeyBoardPress(MOVE_FORWARD);
 		}
-		if (FsGetKeyState(FSKEY_S) || key == FSKEY_WHEELDOWN) {
+		if (key == FSKEY_WHEELDOWN) {
 			cameraController.onKeyBoardPress(MOVE_BACKWARD);
 		}
 
+		// use W S to move up and down
+		if (FsGetKeyState(FSKEY_W)) {
+			cameraController.onKeyBoardPress(MOVE_UP);
+		}
+		if (FsGetKeyState(FSKEY_S)) {
+			cameraController.onKeyBoardPress(MOVE_DOWN);
+		}
+
+		// use A D  to move left and right
 		if (FsGetKeyState(FSKEY_A)) {
 			cameraController.onKeyBoardPress(MOVE_LEFT);
 		}
@@ -171,7 +209,6 @@ int main(void)
 			Campos frame = keyFrames.at(displayedFrameCnt);
 			cameraController.setCameraToPos(frame);
 			cout << cameraController.camera.posToString(frame) << endl;
-			FsSleep(100);
 		}
 		else if (isDisPlayMode == false || displayedFrameCnt == keyFrames.size() - 1) {
 			displayedFrameCnt = 0;
