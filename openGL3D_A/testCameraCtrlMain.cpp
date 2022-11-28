@@ -1,7 +1,13 @@
 /*****************************************************************//**
  * \file   testCameraCtrlMain.cpp
  * \brief  main function to create 3D world to test camera control APIs
- * 
+ *         Camera coordinate:
+ * 							Front - Back :  X axis
+ *                          Left  - Right:  Z axis
+ *                          Up    - Down :  Y axis
+ *							Roll         :  rotate along X axis
+ *							Pitch        :  rotate along Z axis
+ *							Yaw          :  rotate along Y axis
  * \author chenw
  * \date   November 2022
  *********************************************************************/
@@ -26,8 +32,8 @@ void showMenu()
 	cout << "Use these keys on the screen:" << endl;
 	cout << "    Click left button of mouse to change the Pitch and Yaw of the camera view" << endl;
 	cout << "    Use mouse wheel to move forward to backword,(zoom in, zoom out)" << endl;
-	cout << "    W / S: Move up and down along y axis" << endl;		// PS04
-	cout << "    A / D : Move left and right along z axis" << endl;			// PS04
+	cout << "    W / S: Move up and down along y axis" << endl;		
+	cout << "    A / D : Move left and right along z axis" << endl;			
 	cout << endl;
 
 	cout << "    R : reset to inital position" << endl;
