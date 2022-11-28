@@ -33,16 +33,16 @@ void CameraUserController::onKeyBoardPress(CamMoveDirct direction)
 	case ZOOM_IN:
 	case MOVE_FORWARD:
 		camera.getForwardVector(vx, vy, vz);
-		camera.currCameraPos.x += vx * 1 + 0.1;
-		camera.currCameraPos.y += vy * 1 + 0.1;
-		camera.currCameraPos.z += vz * 1 + 0.1;
+		camera.currCameraPos.x += vx * 4 + 0.1;
+		camera.currCameraPos.y += vy * 4 + 0.1;
+		camera.currCameraPos.z += vz * 4 + 0.1;
 		break;
 	case ZOOM_OUT:
 	case MOVE_BACKWARD:
 		camera.getForwardVector(vx, vy, vz);
-		camera.currCameraPos.x -= vx * 1 + 0.1;
-		camera.currCameraPos.y -= vy * 1 + 0.1;
-		camera.currCameraPos.z -= vz * 1 + 0.1;
+		camera.currCameraPos.x -= vx * 4 + 0.1;
+		camera.currCameraPos.y -= vy * 4 + 0.1;
+		camera.currCameraPos.z -= vz * 4 + 0.1;
 		break;
 	case MOVE_RIGHT:
 		camera.getHorizonMoveVector(vx, vy, vz);

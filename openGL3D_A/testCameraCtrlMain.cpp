@@ -31,9 +31,11 @@ void showMenu()
 	cout << "\n\n";
 	cout << "Use these keys on the screen:" << endl;
 	cout << "    Click left button of mouse to change the Pitch and Yaw of the camera view" << endl;
-	cout << "    Use mouse wheel to move forward to backword,(zoom in, zoom out)" << endl;
+	cout << "    Use mouse wheel to move forward to backword,(zoom in, zoom out) or:" << endl;
+	cout << "    F / B forward and backword,(zoom in, zoom out)" << endl;
+	cout << endl;
 	cout << "    W / S: Move up and down along y axis" << endl;
-	cout << "    A / D : Move left and right along z axis" << endl;
+	cout << "    A / D : Move left and right" << endl;
 	cout << endl;
 
 	cout << "    R : reset to inital position" << endl;
@@ -116,10 +118,10 @@ int main(void)
 		}
 
 		// use mouse wheel to move forward and backward
-		if (key == FSKEY_WHEELUP) {
+		if (key == FSKEY_WHEELUP || key == FSKEY_F) {
 			cameraController.onKeyBoardPress(MOVE_FORWARD);
 		}
-		if (key == FSKEY_WHEELDOWN) {
+		if (key == FSKEY_WHEELDOWN || key == FSKEY_B) {
 			cameraController.onKeyBoardPress(MOVE_BACKWARD);
 		}
 
