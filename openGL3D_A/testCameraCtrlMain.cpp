@@ -204,12 +204,12 @@ int main(void)
 		// draw floor
 		//glBegin(GL_LINES);
 		//int x;
-		//for (x = -3000; x <= 3000; x += 50)
+		//for (x = -3000; x <= 3000; x += 100)
 		//{
-		//	glVertex3i(x, 0, -3000);
-		//	glVertex3i(x, 0, 3000);
-		//	glVertex3i(-3000, 0, x);
-		//	glVertex3i(3000, 0, x);
+		//	glVertex3i(x, -100, -3000);
+		//	glVertex3i(x, -100, 3000);
+		//	glVertex3i(-3000, -100, x);
+		//	glVertex3i(3000, -100, x);
 		//}
 		//glEnd();
 
