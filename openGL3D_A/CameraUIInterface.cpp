@@ -46,19 +46,19 @@ void CameraUserController::onKeyBoardPress(CamMoveDirct direction)
 		break;
 	case MOVE_RIGHT:
 		camera.getHorizonMoveVector(vx, vy, vz);
-		camera.currCameraPos.x += vx * 10 + 0.1;
-		camera.currCameraPos.z += vz * 10 + 0.1;
+		camera.currCameraPos.x += vx * 8 + 0.1;
+		camera.currCameraPos.z += vz * 8 + 0.1;
 		break;
 	case MOVE_LEFT:
 		camera.getHorizonMoveVector(vx, vy, vz);
-		camera.currCameraPos.x -= vx * 10 + 0.1;
-		camera.currCameraPos.z -= vz * 10 + 0.1;
+		camera.currCameraPos.x -= vx * 8 + 0.1;
+		camera.currCameraPos.z -= vz * 8 + 0.1;
 		break;
 	case MOVE_UP:
-		camera.currCameraPos.y += 0.5;
+		camera.currCameraPos.y += 5.;
 		break;
 	case MOVE_DOWN:
-		camera.currCameraPos.y -= 0.5;
+		camera.currCameraPos.y -= 5.;
 		break;
 	}
 
