@@ -68,6 +68,7 @@ int main(void)
 	ComicSansFont comicsans;
 	stringstream coordStream;     // for displaying coordinates on screen
 	trajGenerator traj;
+	traj.setVelocity(10);
 
 	bool isDisPlayMode = false;
 	static int displayedFrameCnt = 0;
@@ -106,9 +107,6 @@ int main(void)
 	std::cout << "convert finish " << endl;
 	pre.PointDownsize(data, data.thePoint.size / 4);
 	for (int i = 0; i < data.thePoint.size; i++) {
-
-
-
 		if (i >= nextPrint)
 		{
 			double percent = (100 * i) / data.thePoint.size;
@@ -135,7 +133,6 @@ int main(void)
 			terminate = true;
 			break;
 		case FSKEY_SPACE:
-			//TO DO get current pos
 			currCamPos = cameraController.getCurrCameraPos();
 			currCamPoint = { {currCamPos.x, currCamPos.y, currCamPos.z}, currCamPos.roll / 45. * atan(1.), currCamPos.pitch / 45. * atan(1.), currCamPos.yaw / 45. * atan(1.) };
 			traj.addKeyPoint(currCamPoint);
@@ -204,7 +201,7 @@ int main(void)
 		// 3D drawing from here
 		glColor3ub(0, 0, 255);
 
-		//// draw floor
+		// draw floor
 		//glBegin(GL_LINES);
 		//int x;
 		//for (x = -3000; x <= 3000; x += 50)
@@ -267,7 +264,16 @@ int main(void)
 			coordStream << " (" << screenX << ", " << screenY << ")";
 			comicsans.setColorHSV(0, 1, 1);
 			comicsans.drawText(coordStream.str().c_str(), screenX, screenY - 3, .10);
-			cameraController.onMouseClick(screenX, screenY);
+			cameraController.onMouseClick(screenX, screenY, 0);
+		}
+
+		if (rightButton && mouseEvent == FSMOUSEEVENT_MOVE) { // write coords on screen if left button is held down
+			coordStream.str("");  // reset stream
+			coordStream.precision(4);
+			coordStream << " (" << screenX << ", " << screenY << ")";
+			comicsans.setColorHSV(0, 1, 1);
+			comicsans.drawText(coordStream.str().c_str(), screenX, screenY - 3, .10);
+			cameraController.onMouseClick(screenX, screenY, 1);
 		}
 
 		//play mode

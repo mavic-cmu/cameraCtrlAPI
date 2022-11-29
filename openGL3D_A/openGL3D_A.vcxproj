@@ -128,6 +128,9 @@
     <ClCompile Include="Camera3D.cpp" />
     <ClCompile Include="CameraUIInterface.cpp" />
     <ClCompile Include="DrawingUtilNG.cpp" />
+    <ClCompile Include="plycpp.cpp" />
+    <ClCompile Include="preProcess.cpp" />
+    <ClCompile Include="readPLY.cpp" />
     <ClCompile Include="testCameraCtrlMain.cpp" />
     <ClCompile Include="fssimplewindow.cpp" />
     <ClCompile Include="GraphicFont.cpp" />
@@ -142,6 +145,9 @@
     <ClInclude Include="DrawingUtilNG.h" />
     <ClInclude Include="fssimplewindow.h" />
     <ClInclude Include="GraphicFont.h" />
+    <ClInclude Include="plycpp.h" />
+    <ClInclude Include="preProcess.h" />
+    <ClInclude Include="readPLY.h" />
     <ClInclude Include="trajGenerator.h" />
     <ClInclude Include="utils.h" />
     <ClInclude Include="ysglfontdata.h" />

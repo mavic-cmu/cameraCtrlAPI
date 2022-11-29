@@ -28,7 +28,7 @@ public:
 	 * \param x the x coordinate of screen
 	 * \param y the y coordinate of screen
 	 */
-	void onMouseClick(int x, int y);
+	void onMouseClick(int x, int y, int button);
 
 	/**
 	 * Draw 3D camera boxes of each key frames.

@@ -33,26 +33,26 @@ void CameraUserController::onKeyBoardPress(CamMoveDirct direction)
 	case ZOOM_IN:
 	case MOVE_FORWARD:
 		camera.getForwardVector(vx, vy, vz);
-		camera.currCameraPos.x += vx * 4 + 0.1;
-		camera.currCameraPos.y += vy * 4 + 0.1;
-		camera.currCameraPos.z += vz * 4 + 0.1;
+		camera.currCameraPos.x += vx * 10 + 0.1;
+		camera.currCameraPos.y += vy * 10 + 0.1;
+		camera.currCameraPos.z += vz * 10 + 0.1;
 		break;
 	case ZOOM_OUT:
 	case MOVE_BACKWARD:
 		camera.getForwardVector(vx, vy, vz);
-		camera.currCameraPos.x -= vx * 4 + 0.1;
-		camera.currCameraPos.y -= vy * 4 + 0.1;
-		camera.currCameraPos.z -= vz * 4 + 0.1;
+		camera.currCameraPos.x -= vx * 10 + 0.1;
+		camera.currCameraPos.y -= vy * 10 + 0.1;
+		camera.currCameraPos.z -= vz * 10 + 0.1;
 		break;
 	case MOVE_RIGHT:
 		camera.getHorizonMoveVector(vx, vy, vz);
-		camera.currCameraPos.x += vx * 1 + 0.1;
-		camera.currCameraPos.z += vz * 1 + 0.1;
+		camera.currCameraPos.x += vx * 10 + 0.1;
+		camera.currCameraPos.z += vz * 10 + 0.1;
 		break;
 	case MOVE_LEFT:
 		camera.getHorizonMoveVector(vx, vy, vz);
-		camera.currCameraPos.x -= vx * 1 + 0.1;
-		camera.currCameraPos.z -= vz * 1 + 0.1;
+		camera.currCameraPos.x -= vx * 10 + 0.1;
+		camera.currCameraPos.z -= vz * 10 + 0.1;
 		break;
 	case MOVE_UP:
 		camera.currCameraPos.y += 0.5;
@@ -65,7 +65,7 @@ void CameraUserController::onKeyBoardPress(CamMoveDirct direction)
 	//cout << "vx " << vx << "vy " << vy << "vz " << vz << endl;
 }
 
-void CameraUserController::onMouseClick(int x, int y)
+void CameraUserController::onMouseClick(int x, int y, int button)
 {
 	float rollSign = 1.0;
 	float pitchSign = 1.0;
@@ -78,30 +78,37 @@ void CameraUserController::onMouseClick(int x, int y)
 	if ((x - preMousePosX) > 1) {
 		yawSign = 1.0;
 		changeYaw = true;
+		rollSign = 1.0;
+		changeRoll = true;
 	}
 	else if ((preMousePosX - x) > 1) {
 		yawSign = -1.0;
 		changeYaw = true;
+		rollSign = -1.0;
+		changeRoll = true;
 	}
 
 	if ((y - preMousePosY) > 0) {
 		pitchSign = 1.0;
 		changePitch = true;
+
+
 	}
 	else if ((preMousePosY - y) > 0) {
 		pitchSign = -1.0;
 		changePitch = true;
+
 	}
 
-	if (changeRoll) {
-		camera.currCameraPos.roll += changeRoll * (Camera3D::PI / 180.0);
+	if (button == 1 && changeRoll) {
+		camera.currCameraPos.roll += rollSign * (Camera3D::PI / 180.0);
 	}
 
-	if (changePitch) {
+	if (button == 0 && changePitch) {
 		camera.currCameraPos.pitch += pitchSign * (Camera3D::PI / 180.0);
 	}
 
-	if (changeYaw) {
+	if (button == 0 && changeYaw) {
 		camera.currCameraPos.yaw += yawSign * (Camera3D::PI / 180.0);
 	}
 

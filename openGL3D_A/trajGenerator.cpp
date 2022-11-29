@@ -36,8 +36,10 @@ void trajGenerator::genTraj(int type) {
 		if (type == 1) {
 			for (int i = 0; i < keyPoints.size() - 1; i++) {
 				std::vector<Point> interpolatedPoints = linearInterpolate(keyPoints[i], keyPoints[i + 1]);
-				interpolatedPoints.pop_back();
-				traj.insert(traj.end(), interpolatedPoints.begin(), interpolatedPoints.end());
+				if (interpolatedPoints.size() > 0) {
+					interpolatedPoints.pop_back();
+					traj.insert(traj.end(), interpolatedPoints.begin(), interpolatedPoints.end());
+				}
 			}
 		}
 
