@@ -104,7 +104,7 @@ int main(void)
 	std::cout << "upperBound: " << "x: " << pre.upperBound.x << " y: " << pre.upperBound.y << " z: " << pre.upperBound.z << endl;
 	pre.convert3Dpoint(data);
 	std::cout << "convert finish " << endl;
-	pre.PointDownsize(data, 8000);
+	pre.PointDownsize(data, data.thePoint.size / 4);
 	for (int i = 0; i < data.thePoint.size; i++) {
 
 
@@ -117,7 +117,7 @@ int main(void)
 			nextPrint += step;
 		}
 	}
-	
+
 	showMenu();
 	while (!terminate)
 	{
@@ -203,47 +203,47 @@ int main(void)
 
 		// 3D drawing from here
 		glColor3ub(0, 0, 255);
-		
-		// draw floor
-		glBegin(GL_LINES);
-		int x;
-		for (x = -3000; x <= 3000; x += 50)
-		{
-			glVertex3i(x, 0, -3000);
-			glVertex3i(x, 0, 3000);
-			glVertex3i(-3000, 0, x);
-			glVertex3i(3000, 0, x);
-		}
-		glEnd();
+
+		//// draw floor
+		//glBegin(GL_LINES);
+		//int x;
+		//for (x = -3000; x <= 3000; x += 50)
+		//{
+		//	glVertex3i(x, 0, -3000);
+		//	glVertex3i(x, 0, 3000);
+		//	glVertex3i(-3000, 0, x);
+		//	glVertex3i(3000, 0, x);
+		//}
+		//glEnd();
 
 		pre.drawPoint(data);
 
 		// draw some boxes/buildings
-		glColor3ub(120, 120, 120);
-		DrawingUtilNG::drawCube({ 110, 0, 120 }, { 140, 10, 140 });
-		glColor3ub(120, 255, 120);
-		DrawingUtilNG::drawCube({ 80, 0, -70 }, { 90, 15, -30 }, true);
+		//glColor3ub(120, 120, 120);
+		//DrawingUtilNG::drawCube({ 110, 0, 120 }, { 140, 10, 140 });
+		//glColor3ub(120, 255, 120);
+		//DrawingUtilNG::drawCube({ 80, 0, -70 }, { 90, 15, -30 }, true);
 
 		cameraController.drawCameraKeyFrame();
 
 		// draw axes (x is red, y is green, z is blue, like in all drawing software)
-		glLineWidth(4);
-		glBegin(GL_LINES);
+		//glLineWidth(4);
+		//glBegin(GL_LINES);
 
-		glColor3ub(255, 0, 0);
-		glVertex3i(-500, 0, 0);
-		glVertex3i(500, 0, 0);
+		//glColor3ub(255, 0, 0);
+		//glVertex3i(-500, 0, 0);
+		//glVertex3i(500, 0, 0);
 
-		glColor3ub(0, 255, 0);
-		glVertex3i(0, -500, 0);
-		glVertex3i(0, 500, 0);
+		//glColor3ub(0, 255, 0);
+		//glVertex3i(0, -500, 0);
+		//glVertex3i(0, 500, 0);
 
-		glColor3ub(0, 0, 255);
-		glVertex3i(0, 0, -500);
-		glVertex3i(0, 0, 500);
+		//glColor3ub(0, 0, 255);
+		//glVertex3i(0, 0, -500);
+		//glVertex3i(0, 0, 500);
 
-		glEnd();
-		glLineWidth(1);
+		//glEnd();
+		//glLineWidth(1);
 
 		// Set up 2D drawing
 		glMatrixMode(GL_PROJECTION);

@@ -87,7 +87,7 @@ void preProcess::reCenter(readPLY& data)
 void preProcess::PointDownsize(readPLY& data, int density)
 {
     int ratio = data.thePoint.size / density;
-    if (ratio > 1) {
+    if (ratio >= 1) {
         Point3D_data temp;
         for (int i = 0; i < data.thePoint.size; i++) {
             if ((i % ratio) == 0) 
