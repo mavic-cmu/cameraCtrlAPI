@@ -21,6 +21,7 @@
 #include "ysglfontdata.h"
 #include "Camera3D.h"
 #include "CameraUIInterface.h"
+#include "preProcess.h"
 #include "GraphicFont.h"
 #include "trajGenerator.h"
 
@@ -54,6 +55,11 @@ int main(void)
 		screenX = 0, screenY = 0;
 
 	bool terminate = false;
+	Point3D thePoint;
+	preProcess pre;
+	readPLY data;
+
+	Camera3D camera;
 	CameraUserController cameraController;
 
 	FsOpenWindow(16, 16, 1200, 800, 1);
@@ -70,6 +76,48 @@ int main(void)
 	Point currCamPoint;
 	vector<Point> generatedTraj;
 
+	data.init("flowers.ply");
+	cout << endl;
+	// Example how to access the data, first element
+	std::cout << "x value of the first vertex element: " << data.thePoint.x->at<float>(0) << std::endl;
+	std::cout << "y value of the first vertex element: " << data.thePoint.y->at<float>(0) << std::endl;
+	std::cout << "z value of the first vertex element: " << data.thePoint.z->at<float>(0) << std::endl;
+	std::cout << "nx value of the first vertex element: " << data.thePoint.nx->at<float>(0) << std::endl;
+	std::cout << "ny value of the first vertex element: " << data.thePoint.ny->at<float>(0) << std::endl;
+	std::cout << "nz value of the first vertex element: " << data.thePoint.nz->at<float>(0) << std::endl;
+	std::cout << "r value of the first vertex element: " << static_cast<unsigned int>(data.thePoint.r->at<unsigned char>(0)) << std::endl;
+	std::cout << "g value of the first vertex element: " << static_cast<unsigned int>(data.thePoint.g->at<unsigned char>(0)) << std::endl;
+	std::cout << "b value of the first vertex element: " << static_cast<unsigned int>(data.thePoint.b->at<unsigned char>(0)) << std::endl;
+	std::cout << "alpha value of the first vertex element: " << static_cast<unsigned int>(data.thePoint.alpha->at<unsigned char>(0)) << std::endl;
+	std::cout << "vertex size: " << data.thePoint.size << std::endl;
+
+	const int percentPrint = 5;
+	int step = data.thePoint.size / (100 / percentPrint);
+	int nextPrint = step;
+
+	pre.getCenter(data);
+	std::cout << "MidPoint: " << "x: " << pre.midPoint.x << " y: " << pre.midPoint.y << " z: " << pre.midPoint.z << endl;
+	pre.reCenter(data);
+	pre.getLowerBound(data);
+	pre.getUpperBound(data);
+	std::cout << "lowerBound: " << "x: " << pre.lowerBound.x << " y: " << pre.lowerBound.y << " z: " << pre.lowerBound.z << endl;
+	std::cout << "upperBound: " << "x: " << pre.upperBound.x << " y: " << pre.upperBound.y << " z: " << pre.upperBound.z << endl;
+	pre.convert3Dpoint(data);
+	std::cout << "convert finish " << endl;
+	pre.PointDownsize(data, 8000);
+	for (int i = 0; i < data.thePoint.size; i++) {
+
+
+
+		if (i >= nextPrint)
+		{
+			double percent = (100 * i) / data.thePoint.size;
+			std::cout << "\r" << "paint PLY progress: " << std::string(percent / percentPrint, '|') << percent << "%";
+			std::cout.flush();
+			nextPrint += step;
+		}
+	}
+	
 	showMenu();
 	while (!terminate)
 	{
@@ -155,7 +203,7 @@ int main(void)
 
 		// 3D drawing from here
 		glColor3ub(0, 0, 255);
-
+		
 		// draw floor
 		glBegin(GL_LINES);
 		int x;
@@ -167,6 +215,8 @@ int main(void)
 			glVertex3i(3000, 0, x);
 		}
 		glEnd();
+
+		pre.drawPoint(data);
 
 		// draw some boxes/buildings
 		glColor3ub(120, 120, 120);
