@@ -4,7 +4,13 @@ std::vector<Point> trajGenerator::linearInterpolate(Point p1, Point p2) {
 	std::vector<Point> result;
 
 	double distance = sqrt(pow(p1.pos.x - p2.pos.x, 2) + pow(p1.pos.y - p2.pos.y, 2) + pow(p1.pos.z - p2.pos.z, 2));
-	int steps = distance / velocity;
+	int steps = 0;
+	if (distance == 0) {
+		steps = 60;
+	}
+	else {
+		steps = distance / velocity;
+	}
 	for (int i = 0; i < steps; i++) {
 		Point aPoint;
 		aPoint.pos.x = p1.pos.x + (p2.pos.x - p1.pos.x) * i / steps;
@@ -32,14 +38,12 @@ std::vector<Point> trajGenerator::linearInterpolate(Point p1, Point p2) {
 void trajGenerator::genTraj(int type) {
 	traj.clear();
 	if (keyPoints.size() > 1) {
-	// type = 1: linear interpolation between each pair of neighboring key points
+		// type = 1: linear interpolation between each pair of neighboring key points
 		if (type == 1) {
 			for (int i = 0; i < keyPoints.size() - 1; i++) {
 				std::vector<Point> interpolatedPoints = linearInterpolate(keyPoints[i], keyPoints[i + 1]);
-				if (interpolatedPoints.size() > 0) {
-					interpolatedPoints.pop_back();
-					traj.insert(traj.end(), interpolatedPoints.begin(), interpolatedPoints.end());
-				}
+				interpolatedPoints.pop_back();
+				traj.insert(traj.end(), interpolatedPoints.begin(), interpolatedPoints.end());
 			}
 		}
 
