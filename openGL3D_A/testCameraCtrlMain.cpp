@@ -14,7 +14,6 @@
 
 #include <stdio.h>
 #include <math.h>
-#include <string>
 #include <sstream>
 #include <iostream>
 #include <string>
@@ -23,6 +22,7 @@
 #include "Camera3D.h"
 #include "CameraUIInterface.h"
 #include "GraphicFont.h"
+#include "trajGenerator.h"
 
 using namespace std;
 
@@ -52,13 +52,16 @@ int main(void)
 		screenX = 0, screenY = 0;
 
 	bool terminate = false;
-	Camera3D camera;
 	CameraUserController cameraController;
+	
 	FsOpenWindow(16, 16, 1200, 800, 1);
 
 	//initialize special fonts (after FsOpenWindow)
 	ComicSansFont comicsans;
 	stringstream coordStream;     // for displaying coordinates on screen
+	trajGenerator traj;
+
+	traj.resetTraj(3, 3);
 
 	bool isDisPlayMode = false;
 	static int displayedFrameCnt = 0;
