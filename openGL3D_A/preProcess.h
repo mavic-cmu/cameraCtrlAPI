@@ -36,17 +36,18 @@ public:
 	// This function is to convert the point cloud information passed by readPLY function to struct Point3D_data
 	void convert3Dpoint(readPLY& data);
 	// This function is to get the Lower Boundary from the point cloud to make the initial position of the camera easy to adjust
-	Point3D_singlepoint getLowerBound(readPLY& data);
+	Point3D_singlepoint getLowerBound();
 	// This function is to get the Upper Boundary from the point cloud to make the initial position of the camera easy to adjust
-	Point3D_singlepoint getUpperBound(readPLY& data);
+	Point3D_singlepoint getUpperBound();
 	// This function is to find the center position of the point cloud to make the point cloud center itself on the middle of the drawing window.
-	Point3D_singlepoint getCenter(readPLY& data);
+	Point3D_singlepoint getCenter();
 	// This function is to transfrom all the point cloud to the center position and move the mid point to [0,0,0].
-	void reCenter(readPLY& data);
+	void reCenter();
 	// Downsize the input_point cloud with user input or default value in order to make the pointcloud easy shown on the screen.
-	void PointDownsize(readPLY& data, int density);
+	void PointDownsize( int density , int ratio_set );
 	// This function is to find the mid value of a vector after arrenge from large to small
 	float findMid(vector <float> array);
 
 	void drawPoint(readPLY& data);
+	void getallvalue();
 };
