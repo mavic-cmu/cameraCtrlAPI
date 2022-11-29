@@ -61,6 +61,9 @@ public:
 	 */
 	void setCameraToPos(Campos pos);
 
+
+	Campos getCurrCameraPos(void);
+
 	/**
 	 * Convert current camera position to string, debug purpose.
 	 *

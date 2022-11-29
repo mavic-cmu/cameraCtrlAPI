@@ -9,7 +9,7 @@ bool operator==(const Quaternion& lhs, const Quaternion& rhs) {
 }
 
 bool operator==(const Point& lhs, const Point& rhs) {
-	return lhs.pos == rhs.pos && lhs.quat == rhs.quat;
+	return lhs.pos == rhs.pos && lhs.roll == rhs.roll && lhs.pitch == rhs.pitch && lhs.yaw == rhs.yaw;
 }
 
 // https://splines.readthedocs.io/en/latest/rotation/slerp.html

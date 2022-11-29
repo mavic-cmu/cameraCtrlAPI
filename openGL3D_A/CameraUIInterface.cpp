@@ -20,6 +20,11 @@ void CameraUserController::setCameraToPos(Campos pos)
 	camera.setCameraPosition(pos);
 }
 
+Campos CameraUserController::getCurrCameraPos(void)
+{
+	return camera.currCameraPos;
+}
+
 void CameraUserController::onKeyBoardPress(CamMoveDirct direction)
 {
 	double vx, vy, vz;

@@ -53,7 +53,7 @@ int main(void)
 
 	bool terminate = false;
 	CameraUserController cameraController;
-	
+
 	FsOpenWindow(16, 16, 1200, 800, 1);
 
 	//initialize special fonts (after FsOpenWindow)
@@ -61,11 +61,12 @@ int main(void)
 	stringstream coordStream;     // for displaying coordinates on screen
 	trajGenerator traj;
 
-	traj.resetTraj(3, 3);
-
 	bool isDisPlayMode = false;
 	static int displayedFrameCnt = 0;
 	vector<Campos> keyFrames;
+	Campos currCamPos;
+	Point currCamPoint;
+	vector<Point> generatedTraj;
 
 	showMenu();
 	while (!terminate)
@@ -84,6 +85,10 @@ int main(void)
 			terminate = true;
 			break;
 		case FSKEY_SPACE:
+			//TO DO get current pos
+			currCamPos = cameraController.getCurrCameraPos();
+			currCamPoint = { {currCamPos.x, currCamPos.y, currCamPos.z}, currCamPos.roll / 45. * atan(1.), currCamPos.pitch / 45. * atan(1.), currCamPos.yaw / 45. * atan(1.) };
+			traj.addKeyPoint(currCamPoint);
 			cameraController.addCameraKeyFrame();
 			cout << "Add one key frame" << endl;
 			break;
@@ -214,13 +219,29 @@ int main(void)
 		}
 
 		//play mode
-		if (isDisPlayMode && displayedFrameCnt < keyFrames.size()) {
-			Campos frame = keyFrames.at(displayedFrameCnt);
+		if (isDisPlayMode) {
+			traj.genTraj(1);
+			generatedTraj = traj.getTraj();
+		}
+
+		if (isDisPlayMode && displayedFrameCnt < generatedTraj.size()) {
+			Campos frame = cameraController.getCurrCameraPos();
+			frame.x = generatedTraj.at(displayedFrameCnt).pos.x;
+			frame.y = generatedTraj.at(displayedFrameCnt).pos.y;
+			frame.z = generatedTraj.at(displayedFrameCnt).pos.z;
+			frame.yaw = generatedTraj.at(displayedFrameCnt).yaw / atan(1.) * 45.;
+			frame.pitch = generatedTraj.at(displayedFrameCnt).pitch / atan(1.) * 45.;
+			frame.roll = generatedTraj.at(displayedFrameCnt).roll / atan(1.) * 45.;
 			cameraController.setCameraToPos(frame);
 			cout << cameraController.camera.posToString(frame) << endl;
+
+			if (displayedFrameCnt == generatedTraj.size() - 1) {
+				isDisPlayMode = false;
+			}
 		}
-		else if (isDisPlayMode == false || displayedFrameCnt == keyFrames.size() - 1) {
+		else if (isDisPlayMode == false || displayedFrameCnt == generatedTraj.size() - 1) {
 			displayedFrameCnt = 0;
+
 		}
 
 		FsSwapBuffers();

@@ -69,7 +69,9 @@ public:
 			// print the position of the key point
 			std::cout << "Key point " << i << ": (" << keyPoints[i].pos.x << ", " << keyPoints[i].pos.y << ", " << keyPoints[i].pos.z << "), (";
 			// print the quaternion of the key point
-			std::cout << keyPoints[i].quat.a << ", " << keyPoints[i].quat.b << ", " << keyPoints[i].quat.c << ", " << keyPoints[i].quat.d << ")" << std::endl;
+			// std::cout << keyPoints[i].quat.a << ", " << keyPoints[i].quat.b << ", " << keyPoints[i].quat.c << ", " << keyPoints[i].quat.d << ")" << std::endl;
+			// print the Euler angles of the key point
+			std::cout << keyPoints[i].roll << ", " << keyPoints[i].pitch << ", " << keyPoints[i].yaw << ")" << std::endl;
 		}
 	}
 
@@ -121,7 +123,9 @@ public:
 			// print the position of the key point
 			std::cout << i << ": (" << traj[i].pos.x << ", " << traj[i].pos.y << ", " << traj[i].pos.z << "), (";
 			// print the quaternion of the key point
-			std::cout << traj[i].quat.a << ", " << traj[i].quat.b << ", " << traj[i].quat.c << ", " << traj[i].quat.d << ")" << std::endl;
+			// std::cout << traj[i].quat.a << ", " << traj[i].quat.b << ", " << traj[i].quat.c << ", " << traj[i].quat.d << ")" << std::endl;
+			// print the Euler angles of the key point
+			std::cout << traj[i].roll << ", " << traj[i].pitch << ", " << traj[i].yaw << ")" << std::endl;
 		}
 	}
 };

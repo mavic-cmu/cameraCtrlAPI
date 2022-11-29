@@ -19,7 +19,10 @@ struct Quaternion {
 
 struct Point {
 	Position pos;
-	Quaternion quat;
+	//Quaternion quat;
+	double roll;
+	double pitch;
+	double yaw;
 };
 
 class Utils {
