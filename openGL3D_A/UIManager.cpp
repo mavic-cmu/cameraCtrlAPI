@@ -287,7 +287,7 @@ void UIManager::addAdvanceButtons(GraphicFont* aFont, int xLoc, int yLoc)
 	advanceMenuButtons.add(currX, currY, wid, hei, FSKEY_C, "Pseudo Color", aFont);
 
 	currX += 10 + wid;
-	advanceMenuButtons.add(currX, currY, wid, hei, FSKEY_H, "Help", aFont);
+	advanceMenuButtons.add(currX, currY, wid, hei, FSKEY_H, "Help", aFont, "See terminal for more help information");
 
 }
 
@@ -484,6 +484,14 @@ bool UIManager::manage() {
 			break;
 		case FSKEY_M:
 			showAdvanceMenu = !showAdvanceMenu;
+			break;
+		case FSKEY_H:
+			showMenu();
+			break;
+		case FSKEY_C:
+			break;
+		case FSKEY_O:
+			break;
 		}
 
 		// use mouse wheel to move forward and backward
@@ -545,6 +553,7 @@ bool UIManager::manage() {
 		//mainButtons.checkHover(screenX, screenY); // remove hover feedback for better performance ?
 		if (showAdvanceMenu) {
 			drawAdvanceMeau();
+			//advanceMenuButtons.checkHover(screenX, screenY);
 		}
 
 
@@ -591,182 +600,3 @@ bool UIManager::manage() {
 	return true;
 }
 
-
-//bool UIManager::manage()
-//{
-//	ofstream outFile;
-//	int buttonKey;
-//
-//	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-//
-//	// reset all transformations
-//	glLoadIdentity();
-//
-//	FsPollDevice();
-//	key = FsInkey();
-//
-//	// handle mouse input (OpenGL is still in screen coords)
-//	//manageMouse();
-//	mouseEvent = FsGetMouseEvent(leftButton, middleButton, rightButton, screenX, screenY);
-//	// check if a button was clicked
-//	if (key == FSKEY_NULL && mouseEvent == FSMOUSEEVENT_LBUTTONDOWN) {
-//		buttonKey = theButtons.checkClick(screenX, screenY);
-//
-//		if (buttonKey != FSKEY_NULL)
-//			key = buttonKey;  // pretend the user pressed a key 
-//	}
-//
-//	switch (key) {
-//	case FSKEY_L: // load a file and add to shapes
-//		fileName = DrawingUtilNG::getStringFromScreen("Enter name of file to load.",
-//			"Press ENTER when done, ESC to cancel.");
-//		if (fileName.length() > 0) {
-//
-//			if (fileName.find(".track") == string::npos)
-//				fileName += ".track";
-//
-//			inFile.open(fileName);
-//			//if (inFile.is_open()) {
-//			//	theTrack.readFile(inFile);
-//			//	inFile.close();
-//			//	cout << "       A new track was loaded from file " << fileName << endl;
-//
-//			//	// change zoom to show newly added shape
-//			//	resetView();
-//			//}
-//			//else
-//			//	cout << "       ERROR: Was not able to open file " << fileName << endl;
-//		}
-//		showMenu(); // So that it is "fresh"
-//		break;
-//		//case FSKEY_RIGHT: panX += 5;
-//		//	break;
-//		//case FSKEY_LEFT: panX -= 5;
-//		//	break;
-//		//case FSKEY_UP: panY -= 5;
-//		//	break;
-//		//case FSKEY_DOWN: panY += 5;
-//		//	break;
-//		//case FSKEY_PLUS: scale *= 1.05;
-//		//	break;
-//		//case FSKEY_MINUS: scale /= 1.05;
-//		//	break;
-//
-//		//	// new stuff for PS04
-//		//case FSKEY_Z:   // reset Zoom to fit all shapes
-//		//	resetView();
-//		//	break;
-//		//case FSKEY_E:
-//		//	inEditMode = !inEditMode;
-//		//	break;
-//		//case FSKEY_S: // save current shape (similar to load shape above)
-//		//	//sendUserToConsole();
-//		//	//cout << "Filename for saving current track >> ";
-//		//	//cin >> fileName;
-//		//	fileName = DrawingUtilNG::getStringFromScreen("Enter name of file to save.",
-//		//		"Press ENTER when done, ESC to cancel.");
-//		//	if (fileName.length() > 0) {
-//
-//		//		if (fileName.find(".track") == string::npos)
-//		//			fileName += ".track";
-//
-//		//		outFile.open(fileName);
-//		//		if (outFile.is_open()) {
-//		//			outFile << theTrack;
-//		//			outFile.close();
-//		//			cout << "Just saved " << fileName << " to current folder." << endl;
-//		//		}
-//		//		else {
-//		//			cout << "Cannot open file " << fileName << " for outFile." << endl;
-//		//		}
-//		//		showMenu();
-//		//	}
-//		//	break;
-//		//case FSKEY_H:
-//		//	theTrack.changeColor(10.f);
-//		//	break;
-//		//case FSKEY_B:
-//		//	addSlideBox();
-//		//	break;
-//		//case FSKEY_R:
-//		//	removeSlideBox();
-//		//	break;
-//		//case FSKEY_I:  // set to initial state
-//		//	for (auto& currBox : theBoxes) {
-//		//		currBox.reset();
-//		//	}
-//		//	break;
-//		//case FSKEY_SPACE:
-//		//	simulationIsRunning = !simulationIsRunning;
-//		//	break;
-//
-//	}
-//
-//	//if (inEditMode) {  // also for PS04
-//	//	paintEditIndicator();
-//	//	switch (key) {
-//	//	case FSKEY_A:   // add a point for spline control
-//	//		if (currVertex > 0) { // there is a highlighted point
-//	//			theTrack.addPoint(currVertex, 0.8);
-//	//		}
-//	//		break;
-//	//	case FSKEY_D:   // delete a point
-//	//		if (currVertex > 0) { // there is a highlighted point
-//	//			theTrack.removePoint(currVertex);
-//	//		}
-//	//		break;
-//	//	case FSKEY_P:  // toggle showing points for current shape
-//	//		showThePoints = !showThePoints;
-//	//		break;
-//	//	}
-//	//}
-//
-//	// draw edit mode indicator
-//	//if (inEditMode)
-//	//	paintEditIndicator();
-//
-//	// set up axes to "math normal" (origin at lower left, y-axis going up)
-//	// and pan and scale
-//	//glTranslatef(panX, panY, 0);
-//	//glScalef(scale, -scale, 1);
-//
-//	//theTrack.paint(false, useFillMode, showThePoints || inEditMode);
-//
-//	//// highlight point that could be selected
-//	//if (inEditMode && currVertex > 0) {
-//	//	glColor3ub(215, 215, 0);
-//	//	theTrack.paintPoint(currVertex, 6. / scale);
-//	//}
-//
-//	//int i = 2;
-//	//double red, green, blue;
-//	//for (auto& currBox : theBoxes) {
-//	//	DrawingUtilNG::hsv2rgb(i++ * 60, 1, 1, red, green, blue);
-//	//	glColor3f(red, green, blue);
-//
-//	//	currBox.paint();
-//	//	if (simulationIsRunning)
-//	//		currBox.move(.025);  // should change this to do "real" time
-//	//}
-//
-//	// reset all transformations and paint the buttons on top of everything
-//	glLoadIdentity();
-//	theButtons.paint();
-//	theButtons.checkHover(screenX, screenY); // remove hover feedback for better performance ?
-//
-//	//// paint the box data (not required for PS09)
-//	//string boxData;
-//	//int j = 2;
-//	//for (auto& currBox : theBoxes) {
-//	//	if (simulationIsRunning)
-//	//		boxData = currBox.getDynamicData();
-//	//	else
-//	//		boxData = currBox.getStaticData();
-//
-//	//	screenFont->setColorHSV(j * 60, 1, 1);
-//	//	screenFont->drawText(boxData, 20, j++ * 25, 20./screenFont->getLetterHeight() );
-//	//}
-//
-//
-//	return key != FSKEY_ESC;
-//}
