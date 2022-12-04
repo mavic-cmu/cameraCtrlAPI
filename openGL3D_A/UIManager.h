@@ -45,8 +45,12 @@ private:
 	// for panning and zooming
 	int prevScreenX = -1000, prevScreenY = -1000;
 
+	// if show advance menu
+	bool showAdvanceMenu = false;
+
 	// buttons
-	ButtonCollection theButtons;
+	ButtonCollection mainButtons;
+	ButtonCollection advanceMenuButtons;
 	
 	// data
 	GraphicFont* screenFont; // need to use pointer so that I can declare AFTER FsOpenWindow
@@ -55,6 +59,7 @@ private:
 	preProcess pre;
 	readPLY data3D;
 	trajGenerator traj;
+	std::vector<Point> generatedTraj;
 	// audio feedback on inside/outside check (left-over from PS06 :-)
 	//YsSoundPlayer theSoundPlayer;
 	//YsSoundPlayer::SoundData insideSound;
@@ -83,14 +88,17 @@ protected:
 	void drawGridAndAxis(void);
 	// creates the buttons to be shown on interface
 	// called by constructor
-	void addButtons(GraphicFont* aFont, int xLoc, int wid);
+	void addMainButtons(GraphicFont* aFont, int xLoc, int wid);
+
+	// advance menu buttons
+	void addAdvanceButtons(GraphicFont* aFont, int xLoc, int yLoc);
 
 	// manage slide boxes
 	void sendUserToConsole();
 
 	// load point cloud by entry file name ion screen
 	bool loadPointCloudFile();
-	//void addSlideBox();
-	//void removeSlideBox();
-	//void printAllBoxes();
+
+	// draw advance meau
+	void drawAdvanceMeau();
 };

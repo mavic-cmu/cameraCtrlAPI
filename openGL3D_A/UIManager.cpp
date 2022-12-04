@@ -24,10 +24,11 @@ UIManager::UIManager(int width, int height)
 	glColor3b(255, 0, 0);  // red
 
 	ButtonCollection* myButtons = new ButtonCollection; // put this AFTER FsOpenWindow()
-	GraphicFont* buttonFont = new TimesNewRomanFont;
+	GraphicFont* buttonFont = new ArialFont;
 	buttonFont->setColorRGB(0, 0, 0); // black
 
-	addButtons(buttonFont, winWidth - 108, 100);
+	addMainButtons(buttonFont, 10, 120);
+	addAdvanceButtons(buttonFont, (winWidth - 120) / 2, winHeight / 2);
 }
 
 void UIManager::drawGridAndAxis(void) {
@@ -237,55 +238,56 @@ void UIManager::paintEditIndicator()
 //	}
 //}
 
-void UIManager::addButtons(GraphicFont* aFont, int xLoc, int wid)
+void UIManager::addMainButtons(GraphicFont* aFont, int xLoc, int wid)
 {
-	int hei = 30;
+	int hei = 40;
 	int spacing = 10;
 
-	int currY = 30;
-	theButtons.add(xLoc, currY, wid, hei, FSKEY_L, "Load", aFont,
-		"Load a track from a file");
+	int currY = 10;
+	int currX = xLoc;
+
+	mainButtons.add(xLoc, currY, wid, hei, FSKEY_ALT, "Undo", aFont);
 	
-	currY += hei + spacing;
-	theButtons.add(xLoc, currY, wid, hei, FSKEY_S, "Save", aFont,
-		"Save track to a file");
+	currX += 20 + wid;
+	mainButtons.add(currX, currY, wid, hei, FSKEY_SPACE, "+ Cam", aFont);
 
-	currY += hei + spacing;
-	theButtons.add(xLoc, currY, wid, hei, FSKEY_H, "Hue", aFont,
-		"Cycle through several colors of track");
+	currX = winWidth - wid - 20;
+	mainButtons.add(currX, currY, wid, hei, FSKEY_M, "Advance", aFont);
 
-	//currY += hei + spacing;
-	//theButtons.add(xLoc, currY, wid, hei, FSKEY_Q, "Sound", aFont,
-	//	"Toggle sound feedback on/off");
+}
 
-	currY += hei + spacing;
-	theButtons.add(xLoc, currY, wid, hei, FSKEY_Z, "View All", aFont,
-		"Adjust view to fit the whole track");
+void UIManager::addAdvanceButtons(GraphicFont* aFont, int xLoc, int yLoc)
+{
+	int hei = 40;
+	int wid = 180;
+	int spacing = 10;
 
-	currY += hei + spacing * 3;
-	theButtons.add(xLoc, currY, wid, hei, FSKEY_E, "Edit", aFont,
-		"Toggle Edit Mode");
+	int currY = yLoc;
+	int currX = xLoc;
 
-	currY += hei + spacing * 3;
-	theButtons.add(xLoc, currY, wid, hei, FSKEY_B, "Add Box", aFont,
-		"Add a box to the track");
+	currX += 10;
+	currY += 10;
+	advanceMenuButtons.add(currX, currY, wid, hei, FSKEY_L, "Load Point Cloud", aFont);
 
-	currY += hei + spacing;
-	theButtons.add(xLoc, currY, wid, hei, FSKEY_R, "Remove", aFont,
-		"Remove box from the track");
+	currX += 10 + wid;
+	advanceMenuButtons.add(currX, currY, wid, hei, FSKEY_P, "Preview", aFont);
 
-	currY += hei + spacing;
-	theButtons.add(xLoc, currY, wid, hei, FSKEY_I, "Initial", aFont,
-		"Initialize model (put all boxes at initial positions)");
+	currX += 10 + wid;
+	advanceMenuButtons.add(currX + 40, currY, hei / 2, hei / 2, FSKEY_M, " X ", aFont);
 
-	currY += hei + spacing * 3;
-	GraphicFont* boldFont = new JokermanFont;
-	boldFont->setColorRGB(1., 0., 0.);
-	theButtons.add(xLoc, currY, wid, hei, FSKEY_SPACE, "GO/STOP", boldFont,
-		"Start/Stop the simulation");
+	currX = currX - 2 * wid - 20;
+	currY += 10 + hei;
+	advanceMenuButtons.add(currX, currY, wid, hei, FSKEY_R, "Set Identitiy", aFont);
 
-	// to disable a button (will gray out and won't return its value)
-	//theButtons.disableButton(FSKEY_SPACE);
+	currX += 10 + wid;
+	advanceMenuButtons.add(currX, currY, wid, hei, FSKEY_O, "Export Video", aFont);
+
+	currX = currX - wid - 10;
+	currY += 10 + hei;
+	advanceMenuButtons.add(currX, currY, wid, hei, FSKEY_C, "Pseudo Color", aFont);
+
+	currX += 10 + wid;
+	advanceMenuButtons.add(currX, currY, wid, hei, FSKEY_H, "Help", aFont);
 
 }
 
@@ -338,6 +340,19 @@ bool UIManager::loadPointCloudFile()
 	}
 
 	return true;
+}
+
+void UIManager::drawAdvanceMeau()
+{
+	glColor3ub(255, 255, 255);
+	DrawingUtilNG::drawRectangle((winWidth - 120) / 2 - 40, winHeight / 2, 500, 200, true);
+	glColor3ub(0, 0, 0);
+	DrawingUtilNG::drawRectangle((winWidth - 120) / 2 - 40, winHeight / 2, 500, 200, false);
+	glColor3ub(255, 0, 0);
+	DrawingUtilNG::drawRectangle((winWidth - 120) / 2 - 40 + 430, winHeight / 2 + 10, 20, 20, true);
+
+	advanceMenuButtons.paint();
+
 }
 
 bool UIManager::manage() {
@@ -416,7 +431,14 @@ bool UIManager::manage() {
 		//cout << "key " << key << "mouseEvent " << mouseEvent << " " << FSKEY_L << endl;
 		// check if a button was clicked
 		if (key == FSKEY_NULL && mouseEvent == FSMOUSEEVENT_LBUTTONDOWN) {
-			buttonKey = theButtons.checkClick(screenX, screenY);
+			buttonKey = mainButtons.checkClick(screenX, screenY);
+
+			if (buttonKey != FSKEY_NULL)
+				key = buttonKey;  // pretend the user pressed a key 
+		}
+
+		if (showAdvanceMenu == true && key == FSKEY_NULL && mouseEvent == FSMOUSEEVENT_LBUTTONDOWN) {
+			buttonKey = advanceMenuButtons.checkClick(screenX, screenY);
 
 			if (buttonKey != FSKEY_NULL)
 				key = buttonKey;  // pretend the user pressed a key 
@@ -432,11 +454,11 @@ bool UIManager::manage() {
 			showMenu(); // So that it is "fresh"
 			break;
 		case FSKEY_SPACE:
-		/*	currCamPos = cameraController.getCurrCameraPos();
+			currCamPos = cameraController.getCurrCameraPos();
 			currCamPoint = { {currCamPos.x, currCamPos.y, currCamPos.z}, currCamPos.roll / 45. * atan(1.), currCamPos.pitch / 45. * atan(1.), currCamPos.yaw / 45. * atan(1.) };
 			traj.addKeyPoint(currCamPoint);
 			cameraController.addCameraKeyFrame();
-			cout << "Add one key frame" << endl;*/
+			cout << "Add one key frame" << endl;
 			break;
 		case FSKEY_ALT:
 			cameraController.deleteCameraKeyFrame();
@@ -456,9 +478,12 @@ bool UIManager::manage() {
 		case FSKEY_P:
 			// play mode, to play viewer based on keyFrames
 			isDisPlayMode = !isDisPlayMode;
+			showAdvanceMenu = false;
 			cameraController.camera.getCameraKeyFrames(keyFrames);
 			cout << " isDisPlayMode " << isDisPlayMode;
 			break;
+		case FSKEY_M:
+			showAdvanceMenu = !showAdvanceMenu;
 		}
 
 		// use mouse wheel to move forward and backward
@@ -512,12 +537,15 @@ bool UIManager::manage() {
 		glDisable(GL_DEPTH_TEST);
 
 		comicsans.setColorHSV(0, 1, 1);
-		comicsans.drawText("Testing Camera control APIs!", 10, 60, .25);
+		/*comicsans.drawText("Testing Camera control APIs!", 10, 60, .25);*/
 		std::string data;
-		comicsans.drawText(cameraController.getCurrCameraParameterString(), 10, 95, .15);
+		comicsans.drawText(cameraController.getCurrCameraParameterString(), 10, 150, .15);
 
-		theButtons.paint();
-		theButtons.checkHover(screenX, screenY); // remove hover feedback for better performance ?
+		mainButtons.paint();
+		//mainButtons.checkHover(screenX, screenY); // remove hover feedback for better performance ?
+		if (showAdvanceMenu) {
+			drawAdvanceMeau();
+		}
 
 
 		//display coords of mouse
@@ -531,33 +559,33 @@ bool UIManager::manage() {
 		}
 
 		////play mode
-		//if (isDisPlayMode) {
-		//	traj.genTraj(1);
-		//	generatedTraj = traj.getTraj();
-		//}
+		if (isDisPlayMode) {
+			traj.genTraj(1);
+			generatedTraj = traj.getTraj();
+		}
 
-		//if (isDisPlayMode && displayedFrameCnt < generatedTraj.size()) {
-		//	Campos frame = cameraController.getCurrCameraPos();
-		//	frame.x = generatedTraj.at(displayedFrameCnt).pos.x;
-		//	frame.y = generatedTraj.at(displayedFrameCnt).pos.y;
-		//	frame.z = generatedTraj.at(displayedFrameCnt).pos.z;
-		//	frame.yaw = generatedTraj.at(displayedFrameCnt).yaw / atan(1.) * 45.;
-		//	frame.pitch = generatedTraj.at(displayedFrameCnt).pitch / atan(1.) * 45.;
-		//	frame.roll = generatedTraj.at(displayedFrameCnt).roll / atan(1.) * 45.;
-		//	cameraController.setCameraToPos(frame);
-		//	cout << cameraController.camera.posToString(frame) << endl;
+		if (isDisPlayMode && displayedFrameCnt < generatedTraj.size()) {
+			Campos frame = cameraController.getCurrCameraPos();
+			frame.x = generatedTraj.at(displayedFrameCnt).pos.x;
+			frame.y = generatedTraj.at(displayedFrameCnt).pos.y;
+			frame.z = generatedTraj.at(displayedFrameCnt).pos.z;
+			frame.yaw = generatedTraj.at(displayedFrameCnt).yaw / atan(1.) * 45.;
+			frame.pitch = generatedTraj.at(displayedFrameCnt).pitch / atan(1.) * 45.;
+			frame.roll = generatedTraj.at(displayedFrameCnt).roll / atan(1.) * 45.;
+			cameraController.setCameraToPos(frame);
+			//cout << cameraController.camera.posToString(frame) << endl;
 
-		//	if (displayedFrameCnt == generatedTraj.size() - 1) {
-		//		isDisPlayMode = false;
-		//	}
-		//}
-		//else if (isDisPlayMode == false || displayedFrameCnt == generatedTraj.size() - 1) {
-		//	displayedFrameCnt = 0;
+			if (displayedFrameCnt == generatedTraj.size() - 1) {
+				isDisPlayMode = false;
+			}
+		}
+		else if (isDisPlayMode == false || displayedFrameCnt == generatedTraj.size() - 1) {
+			displayedFrameCnt = 0;
 
-		//}
+		}
 		FsSwapBuffers();
 		FsSleep(10);
-		//displayedFrameCnt++;
+		displayedFrameCnt++;
 	}
 
 	return true;

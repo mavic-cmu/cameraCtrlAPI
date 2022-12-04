@@ -25,7 +25,7 @@
 int main(void)
 {
 	// set up UI manager
-	UIManager theManager(900, 600);
+	UIManager theManager(1600, 900);
 	theManager.manage();
 	//while (theManager.manage()) {
 	//	// actually display graphics
