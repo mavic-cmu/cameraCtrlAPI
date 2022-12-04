@@ -81,6 +81,7 @@ public:
 	void showMenu();
 
 protected:
+	CameraUserController cameraController;
 
 	void drawGridAndAxis(void);
 	// creates the buttons to be shown on interface

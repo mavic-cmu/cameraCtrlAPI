@@ -161,6 +161,10 @@ void UIManager::threadEntry(UIManager* thisPtr)
 			if (thisPtr->loadPointCloudFile()) {
 				thisPtr->startLoadFile = false;
 				thisPtr->isLoadFinish = true;
+				Point3D_singlepoint lowerBound = thisPtr->pre.getLowerBound();
+				Point3D_singlepoint upperBound = thisPtr->pre.getUpperBound();
+				thisPtr->cameraController.camera.resetCameraPos(lowerBound.x, lowerBound.y, lowerBound.z,
+																upperBound.x, upperBound.y, upperBound.z);
 			}
 			else {
 				thisPtr->startLoadFile = false;
@@ -268,9 +272,6 @@ bool UIManager::manage() {
 
 	bool terminate = false;
 	Point3D thePoint;
-
-
-	CameraUserController cameraController;
 
 	//initialize special fonts (after FsOpenWindow)
 	ComicSansFont comicsans;

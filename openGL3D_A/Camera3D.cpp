@@ -49,9 +49,9 @@ Camera3D::Camera3D()
 void Camera3D::initialize(void)
 {
 
-	initialCameraPos.x = -100;
-	initialCameraPos.y = 100.0;
-	initialCameraPos.z = 10.0;
+	initialCameraPos.x = 0.;
+	initialCameraPos.y = 0.;
+	initialCameraPos.z = 0.;
 	initialCameraPos.roll = 0;
 	initialCameraPos.pitch = (-30. / 180.) * PI;
 	initialCameraPos.yaw = (-90. / 180.) * PI;
@@ -123,9 +123,15 @@ void Camera3D::resetCameraPos(void)
 	currCameraPos = initialCameraPos;
 }
 
-void Camera3D::resetCameraPos(double maxBound)
+void Camera3D::resetCameraPos(double xMin, double yMin, double zMin, double xMax, double yMax, double zMax)
 {
 	// calculate the initial camera position based on input clould point center
+	initialCameraPos.x = -xMax;
+	initialCameraPos.y = yMax;
+	//initialCameraPos.z = z;
+
+	// update current cameraPos
+	currCameraPos = initialCameraPos;
 
 }
 

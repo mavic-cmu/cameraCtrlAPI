@@ -95,7 +95,7 @@ public:
 	/**
 	 * Reset camera pos to initial position, user input maxBound.
 	 */
-	void resetCameraPos(double maxBound); // calculate camera position base on maxBound
+	void resetCameraPos(double xMin, double yMin, double zMin, double xMax, double yMax, double zMax);
 
 	/**
 	 * Set camera position to position, this func is for play trajectory.
