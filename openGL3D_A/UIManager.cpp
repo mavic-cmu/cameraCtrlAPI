@@ -400,8 +400,11 @@ bool UIManager::manage() {
 		glPolygonOffset(1, 1);
 
 		pre.drawPoint(data3D);
-		cameraController.drawCameraKeyFrame();
-		drawGridAndAxis();
+
+		if (!isDisPlayMode) {
+			cameraController.drawCameraKeyFrame();
+			drawGridAndAxis();
+		}
 
 		// Set up 2D drawing
 		glMatrixMode(GL_PROJECTION);
@@ -413,18 +416,12 @@ bool UIManager::manage() {
 
 		glDisable(GL_DEPTH_TEST);
 
-		comicsans.setColorHSV(0, 1, 1);
-		/*comicsans.drawText("Testing Camera control APIs!", 10, 60, .25);*/
-		std::string data;
-		comicsans.drawText(cameraController.getCurrCameraParameterString(), 10, 150, .15);
-
 		mainButtons.paint();
 		//mainButtons.checkHover(screenX, screenY); // remove hover feedback for better performance ?
 		if (showAdvanceMenu) {
 			drawAdvanceMeau();
 			//advanceMenuButtons.checkHover(screenX, screenY);
 		}
-
 
 		//display coords of mouse
 		if (leftButton && mouseEvent == FSMOUSEEVENT_MOVE) { // write coords on screen if left button is held down
@@ -440,6 +437,12 @@ bool UIManager::manage() {
 		if (isDisPlayMode) {
 			traj.genTraj(1);
 			generatedTraj = traj.getTraj();
+		}
+		else {
+			comicsans.setColorHSV(0, 1, 1);
+			/*comicsans.drawText("Testing Camera control APIs!", 10, 60, .25);*/
+			std::string data;
+			comicsans.drawText(cameraController.getCurrCameraParameterString(), 10, 150, .15);
 		}
 
 		if (isDisPlayMode && displayedFrameCnt < generatedTraj.size()) {
