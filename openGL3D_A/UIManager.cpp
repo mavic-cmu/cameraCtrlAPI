@@ -29,6 +29,8 @@ UIManager::UIManager(int width, int height)
 
 	addMainButtons(buttonFont, 10, 120);
 	addAdvanceButtons(buttonFont, (winWidth - 120) / 2, winHeight / 2);
+
+	traj.setVelocity(10);
 }
 
 void UIManager::drawGridAndAxis(void) {
