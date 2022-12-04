@@ -49,9 +49,9 @@ private:
 	bool showAdvanceMenu = false;
 
 	//thread
-	//thread loadPointThread;
-	bool startLoadFile = false;
-	bool isLoadFinish = false;
+	std::atomic<bool> startLoadFile = false;
+	std::atomic<bool> isLoadFinish = false;
+
 	// buttons
 	ButtonCollection mainButtons;
 	ButtonCollection advanceMenuButtons;
