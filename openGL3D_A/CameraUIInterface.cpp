@@ -116,9 +116,9 @@ void CameraUserController::onMouseClick(int x, int y, int button)
 	preMousePosY = y;
 }
 
-void CameraUserController::drawCameraKeyFrame(void)
+void CameraUserController::drawCameraKeyFrame(bool drawLine)
 {
-	camera.drawKeyFrameCamPos();
+	camera.drawKeyFrameCamPos(drawLine);
 }
 
 void CameraUserController::addCameraKeyFrame(void)

@@ -402,7 +402,7 @@ bool UIManager::manage() {
 		pre.drawPoint(data3D);
 
 		if (!isDisPlayMode) {
-			cameraController.drawCameraKeyFrame();
+			cameraController.drawCameraKeyFrame(true);
 			drawGridAndAxis();
 		}
 
@@ -416,7 +416,6 @@ bool UIManager::manage() {
 
 		glDisable(GL_DEPTH_TEST);
 
-		mainButtons.paint();
 		//mainButtons.checkHover(screenX, screenY); // remove hover feedback for better performance ?
 		if (showAdvanceMenu) {
 			drawAdvanceMeau();
@@ -443,6 +442,7 @@ bool UIManager::manage() {
 			/*comicsans.drawText("Testing Camera control APIs!", 10, 60, .25);*/
 			std::string data;
 			comicsans.drawText(cameraController.getCurrCameraParameterString(), 10, 150, .15);
+			mainButtons.paint();
 		}
 
 		if (isDisPlayMode && displayedFrameCnt < generatedTraj.size()) {

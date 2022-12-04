@@ -244,12 +244,26 @@ void Camera3D::drawCamera(Campos camera)
 }
 
 
-int Camera3D::drawKeyFrameCamPos()
+int Camera3D::drawKeyFrameCamPos(bool drawLine)
 {
 	if (keyFrames.size() > 0) {
-		for (auto cam : keyFrames) {
-			glColor3ub(120, 0, 0);
-			drawCamera(cam);
+		Campos firstCam = keyFrames.at(0);
+		drawCamera(firstCam);
+		glVertex3i(firstCam.x, firstCam.y, firstCam.z);
+		//for (auto cam : keyFrames) {
+		//	glColor3ub(120, 0, 0);
+		//	drawCamera(cam);
+		//	glVertex3i(cam.x, cam.y, cam.z);
+		//}
+		for (int i = 1; i < keyFrames.size(); i++) {
+			Campos camStart = keyFrames.at(i);
+			Campos camEnd = keyFrames.at(i - 1);
+			glBegin(GL_LINES);
+			glLineWidth(2);
+			glVertex3i(camStart.x, camStart.y, camStart.z);
+			glVertex3i(camEnd.x, camEnd.y, camEnd.z);
+			glEnd();
+			drawCamera(camStart);
 		}
 	}
 

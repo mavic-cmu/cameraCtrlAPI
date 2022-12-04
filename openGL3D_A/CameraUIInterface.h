@@ -34,7 +34,7 @@ public:
 	 * Draw 3D camera boxes of each key frames.
 	 *
 	 */
-	void drawCameraKeyFrame(void);
+	void drawCameraKeyFrame(bool drawLine);
 
 	/**
 	 * Record current camera poistion ad key frame.

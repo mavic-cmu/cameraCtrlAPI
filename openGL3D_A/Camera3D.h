@@ -127,7 +127,7 @@ public:
 	 *
 	 * \return
 	 */
-	int   drawKeyFrameCamPos();
+	int   drawKeyFrameCamPos(bool drawLine);
 
 };
 
