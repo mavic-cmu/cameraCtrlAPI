@@ -214,6 +214,9 @@ void UIManager::threadEntry(UIManager* thisPtr)
 				thisPtr->startLoadFile = false;
 				thisPtr->isLoadFinish = true;
 			}
+			else {
+				thisPtr->startLoadFile = false;
+			}
 		}
 
 	}
@@ -392,6 +395,7 @@ bool UIManager::manage() {
 			break;
 		case FSKEY_ALT:
 			cameraController.deleteCameraKeyFrame();
+			traj.removeLastKeyPoint();
 			cout << "delete one key frame" << endl;
 			break;
 		case FSKEY_R:

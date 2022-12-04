@@ -52,6 +52,8 @@ public:
 	 */
 	void removeKeyPoint(int index) { keyPoints.erase(keyPoints.begin() + index); }
 
+	void removeLastKeyPoint(void) { if (keyPoints.size() > 0) keyPoints.pop_back(); }
+
 	/*
 	 * @brief: remove all key points
 	 * @param: void
