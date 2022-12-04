@@ -848,8 +848,16 @@ bool DrawingUtilNG::buildStringFromFsInkey(int key, std::string& currString)
 std::string DrawingUtilNG::getStringFromScreen(const std::string& prompt1,
 	const std::string& prompt2, const std::string& prompt3)
 {
+
+	int winWidth, winHeight;
+	FsGetWindowSize(winWidth, winHeight);
+
+	int xloc = winWidth * 0.35;
+	int yloc = winHeight * 0.35;
+	int vspace = winHeight *0.08;
+
 	int key;
-	int xloc = 140, yloc = 200, vspace = 40;
+	
 	std::string inputString = ""; // probably don't need this initialization
 	ArialFont arial;
 	double fscale = 0.3;
@@ -860,7 +868,7 @@ std::string DrawingUtilNG::getStringFromScreen(const std::string& prompt1,
 
 		// ask for input from the graphics window 
 		// (using GraphicFont or ysgfontdata, comment/uncomment as needed)
-		yloc = 100;
+		yloc = winHeight * 0.35;
 		//glColor3f(0, 0, 0);
 		arial.setColorRGB(0., 0., 0.);
 		if (prompt1.length() > 0) {
@@ -898,7 +906,7 @@ std::string DrawingUtilNG::getStringFromScreen(const std::string& prompt1,
 		//YsGlDrawFontBitmap16x24(inputString.c_str());
 
 		arial.setColorRGB(1., 0., 1.);
-		arial.drawText(inputString, 150, yloc, fscale);
+		arial.drawText(inputString, xloc, yloc, fscale);
 
 		inputString = inputString.substr(0, inputString.length() - 1); // remove underscore
 

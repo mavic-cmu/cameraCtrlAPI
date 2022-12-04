@@ -28,8 +28,9 @@ UIManager::UIManager(int width, int height)
 	GraphicFont* buttonFont = new ArialFont;
 	buttonFont->setColorRGB(0, 0, 0); // black
 
-	addMainButtons(buttonFont, 10, 120);
-	addAdvanceButtons(buttonFont, (winWidth - 120) / 2, winHeight / 2);
+
+	addMainButtons(buttonFont, 0, 0);
+	addAdvanceButtons(buttonFont, winWidth*0.4, winHeight*0.4);
 
 	traj.setVelocity(10);
 }
@@ -97,112 +98,65 @@ void UIManager::showMenu()
 }
 
 
-void UIManager::paintEditIndicator()
-{
-	bool useAwful = false;
-
-	if (!useAwful) {
-		// draw yellow square all around, with the word "EDIT" at top right and
-		// bottom left corners
-
-		// box around (big yellow rectangle with slightly smaller white rectangle)
-		glColor3ub(255, 255, 0); // yellow
-		int frameThickness = 5;
-		DrawingUtilNG::drawRectangle(frameThickness, frameThickness,
-			winWidth - 2 * frameThickness - 1, winHeight - 2 * frameThickness - 1, true,
-			winWidth, winHeight);
-
-		// little boxes for EDIT label
-		glColor3ub(255, 255, 0); // yellow
-		int boxW = 40, boxH = 18;
-		DrawingUtilNG::drawRectangle(winWidth - boxW, 0, boxW, boxH, true);
-		DrawingUtilNG::drawRectangle(0, winHeight - boxH, boxW, boxH, true);
-
-		// label "EDIT"
-		glColor3ub(0, 0, 0); // black
-		glRasterPos2i(winWidth - boxW + 3, boxH - 3);  // top right
-		YsGlDrawFontBitmap8x12("EDIT");
-		glRasterPos2i(3, winHeight - 3);  // bottom left
-		YsGlDrawFontBitmap8x12("EDIT");
-
-		// little box for instructions on adding and deleting points
-		glColor3ub(255, 255, 0); // yellow
-		DrawingUtilNG::drawRectangle(winWidth, winHeight, -4 * boxW, -2 * boxH, true);
-		glColor3ub(0, 0, 0); // black
-		glRasterPos2i(winWidth - 3.7 * boxW + 3, winHeight - boxH - 3);
-		YsGlDrawFontBitmap8x12("A : Add point");
-		glRasterPos2i(winWidth - 3.7 * boxW + 3, winHeight - 3);
-		YsGlDrawFontBitmap8x12("D : Delete point");
-
-	}
-	else {
-		// awful edit indicator (but simple to code :-)
-		glColor3ub(0, 0, 0); // black
-		glRasterPos2i(0, 30);  // top right
-		YsGlDrawFontBitmap20x28("YOU ARE NOW IN EDIT MODE");
-	}
-}
-
-
 void UIManager::addMainButtons(GraphicFont* aFont, int xLoc, int wid)
 {
-	int hei = 40;
+	FsGetWindowSize(winWidth, winHeight);
+	int buttonHei = winHeight * 0.05;
+	int buttonWid = winWidth * 0.1;
 	int spacing = 10;
 
-	int currY = 10;
-	int currX = xLoc;
+	int currY = spacing;
+	int currX = xLoc + spacing;
 
-	mainButtons.add(xLoc, currY, wid, hei, FSKEY_ALT, "Undo", aFont);
+	mainButtons.add(currX, currY, buttonWid, buttonHei, FSKEY_ALT, "Undo", aFont);
 	
-	currX += 20 + wid;
-	mainButtons.add(currX, currY, wid, hei, FSKEY_SPACE, "+ Cam", aFont);
+	currX += spacing + buttonWid;
+	mainButtons.add(currX, currY, buttonWid, buttonHei, FSKEY_SPACE, "+ Cam", aFont);
 
-	currX = winWidth - wid - 20;
-	mainButtons.add(currX, currY, wid, hei, FSKEY_M, "Advance", aFont);
+	currX = winWidth - buttonWid - spacing;
+	mainButtons.add(currX, currY, buttonWid, buttonHei, FSKEY_M, "Advance", aFont);
 
 }
 
 void UIManager::addAdvanceButtons(GraphicFont* aFont, int xLoc, int yLoc)
 {
-	int hei = 40;
-	int wid = 180;
+	FsGetWindowSize(winWidth, winHeight);
+	int buttonHei = winHeight * 0.04;
+	int buttonWid = winWidth * 0.1;
 	int spacing = 10;
 
 	int currY = yLoc;
 	int currX = xLoc;
 
-	currX += 10;
-	currY += 10;
-	advanceMenuButtons.add(currX, currY, wid, hei, FSKEY_L, "Load Point Cloud", aFont);
+	currX += spacing;
+	currY += spacing;
+	advanceMenuButtons.add(currX, currY, buttonWid, buttonHei, FSKEY_L, "Load Point Cloud", aFont);
 
-	currX += 10 + wid;
-	advanceMenuButtons.add(currX, currY, wid, hei, FSKEY_P, "Preview", aFont);
+	currX += spacing + buttonWid;
+	advanceMenuButtons.add(currX, currY, buttonWid, buttonHei, FSKEY_P, "Preview", aFont);
 
-	currX += 10 + wid;
-	advanceMenuButtons.add(currX + 40, currY, hei / 2, hei / 2, FSKEY_M, " X ", aFont);
+	GraphicFont* buttonFont = new ArialFont;
+	buttonFont->setColorRGB(255, 0, 0); // red
+	currX += spacing + buttonWid;
+	advanceMenuButtons.add(currX + 40, currY, buttonHei / 1.5, buttonHei / 1.5, FSKEY_M, " X ", buttonFont);
 
-	currX = currX - 2 * wid - 20;
-	currY += 10 + hei;
-	advanceMenuButtons.add(currX, currY, wid, hei, FSKEY_R, "Set Identitiy", aFont);
 
-	currX += 10 + wid;
-	advanceMenuButtons.add(currX, currY, wid, hei, FSKEY_O, "Export Video", aFont);
+	currX = currX - 2 * buttonWid - spacing * 2;
+	currY += spacing + buttonHei;
+	advanceMenuButtons.add(currX, currY, buttonWid, buttonHei, FSKEY_R, "Set Identitiy", aFont);
 
-	currX = currX - wid - 10;
-	currY += 10 + hei;
-	advanceMenuButtons.add(currX, currY, wid, hei, FSKEY_C, "Pseudo Color", aFont);
+	currX += spacing + buttonWid;
+	advanceMenuButtons.add(currX, currY, buttonWid, buttonHei, FSKEY_O, "Export Video", aFont);
 
-	currX += 10 + wid;
-	advanceMenuButtons.add(currX, currY, wid, hei, FSKEY_H, "Help", aFont, "See terminal for more help information");
+	currX = currX - buttonWid - spacing;
+	currY += spacing + buttonHei;
+	advanceMenuButtons.add(currX, currY, buttonWid, buttonHei, FSKEY_C, "Pseudo Color", aFont);
+
+	currX += spacing + buttonWid;
+	advanceMenuButtons.add(currX, currY, buttonWid, buttonHei, FSKEY_H, "Help", aFont, "See terminal for more help information");
 
 }
 
-void UIManager::sendUserToConsole() {
-	glColor3f(0, 0, 0);
-	glRasterPos2d(100, 200);
-	YsGlDrawFontBitmap20x28("Input required on console . . .");
-	FsSwapBuffers();
-}
 
 void UIManager::threadEntry(UIManager* thisPtr)
 {
@@ -306,11 +260,9 @@ void UIManager::drawLoadingPage(void)
 void UIManager::drawAdvanceMeau()
 {
 	glColor3ub(255, 255, 255);
-	DrawingUtilNG::drawRectangle((winWidth - 120) / 2 - 40, winHeight / 2, 500, 200, true);
+	DrawingUtilNG::drawRectangle(winWidth * 0.38, winHeight * 0.38, winWidth *0.3, winHeight*0.2, true);
 	glColor3ub(0, 0, 0);
-	DrawingUtilNG::drawRectangle((winWidth - 120) / 2 - 40, winHeight / 2, 500, 200, false);
-	glColor3ub(255, 0, 0);
-	DrawingUtilNG::drawRectangle((winWidth - 120) / 2 - 40 + 430, winHeight / 2 + 10, 20, 20, true);
+	DrawingUtilNG::drawRectangle(winWidth * 0.38, winHeight * 0.38, winWidth * 0.3, winHeight * 0.2, false);
 
 	advanceMenuButtons.paint();
 
@@ -495,7 +447,7 @@ bool UIManager::manage() {
 				loadingString = loadingString.substr(0, 20);
 			}
 			comicsans.setColorHSV(0, 1, 1);
-			comicsans.drawText(loadingString , winWidth / 2, winHeight / 2, .25);
+			comicsans.drawText(loadingString , winWidth*0.4, winHeight*0.37, .25);
 		}
 
 		//display coords of mouse
@@ -517,7 +469,7 @@ bool UIManager::manage() {
 			comicsans.setColorHSV(0, 1, 1);
 			/*comicsans.drawText("Testing Camera control APIs!", 10, 60, .25);*/
 			std::string data;
-			comicsans.drawText(cameraController.getCurrCameraParameterString(), 10, 150, .15);
+			comicsans.drawText(cameraController.getCurrCameraParameterString(), 10, 80, .15);
 			mainButtons.paint();
 		}
 

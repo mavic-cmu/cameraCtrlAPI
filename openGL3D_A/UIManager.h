@@ -82,13 +82,6 @@ public:
 
 protected:
 
-	// if manager is in edit mode, this paints some indication on the graphics
-	// screen that this is the case. Otherwise does nothing
-	void paintEditIndicator();
-
-	// handle mouse input (OpenGL is still in screen coords)
-	//void manageMouse();
-
 	void drawGridAndAxis(void);
 	// creates the buttons to be shown on interface
 	// called by constructor

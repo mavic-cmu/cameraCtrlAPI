@@ -163,7 +163,7 @@ void Button::paint()
 	if (enabled)
 		theFont->setColorRGB(0, 0, 0);
 	else
-		theFont->setColorRGB(.4, .4, .4);
+		theFont->setColorRGB(.5, .5, .5);
 
 	int letterHei = theFont->getLetterHeight();
 	theFont->drawText(label, x + xSize / 2, y + ySize / 2, (float)(ySize - 8) / letterHei, 0, true);
