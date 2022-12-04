@@ -1,13 +1,14 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <thread>
 #include "DrawingUtilNG.h"
 #include "GraphicFont.h"
 #include "StringPlus.h"
 #include "ysglfontdata.h"
 #include "yssimplesound.h"
 #include "UIManager.h"
-
+#include <windows.h>
 
 using namespace std;
 
@@ -203,10 +204,23 @@ void UIManager::sendUserToConsole() {
 	FsSwapBuffers();
 }
 
+void UIManager::threadEntry(UIManager* thisPtr)
+{
+
+	while (1) {
+		if (thisPtr->startLoadFile) {
+			cout << "Load File start" << endl;
+			if (thisPtr->loadPointCloudFile()) {
+				thisPtr->startLoadFile = false;
+				thisPtr->isLoadFinish = true;
+			}
+		}
+
+	}
+}
+
 bool UIManager::loadPointCloudFile()
 {
-	fileName = DrawingUtilNG::getStringFromScreen("Enter name of file to load.",
-		"Press ENTER when done, ESC to cancel.");
 	if (fileName.length() > 0) {
 
 		if (fileName.find(".ply") == string::npos)
@@ -247,6 +261,45 @@ bool UIManager::loadPointCloudFile()
 	return true;
 }
 
+void UIManager::drawLoadingPage(void)
+{
+	int key = FSKEY_NULL;
+	int wid, hei;
+	FsGetWindowSize(wid, hei);
+
+	// spaceship
+	ComicSansFont comicsans;
+	int currAngle = 0;
+
+	int waitCnt = 0;
+
+	while (!isLoadFinish)
+	{
+		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+
+		// draw image
+
+		glViewport(0, 0, wid, hei);
+
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glOrtho(0, (float)wid - 1, (float)hei - 1, 0, -1, 1);
+
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+
+		string longText = "Loading... Loading... Loading...  ";
+		comicsans.setColorHSV(100, 100, 100, 1);
+		comicsans.drawTextCircle(longText, wid/2, hei / 2, hei/20, .3, currAngle, 1);
+		comicsans.drawText("Loading PointCloud files...", 10, 60, .25);
+		currAngle += (currAngle >= 360) ? 1 : -359;
+
+		FsSwapBuffers();
+		FsSleep(10);
+	}
+}
+
+
 void UIManager::drawAdvanceMeau()
 {
 	glColor3ub(255, 255, 255);
@@ -274,13 +327,14 @@ bool UIManager::manage() {
 	ComicSansFont comicsans;
 	stringstream coordStream;     // for displaying coordinates on screen
 
-	//traj.setVelocity(10);
 	bool isDisPlayMode = false;
 	static int displayedFrameCnt = 0;
 	vector<Campos> keyFrames;
 	Campos currCamPos;
 	Point currCamPoint;
 	int buttonKey;
+	string loadingString = "Loading Point cloud file";
+	thread loadPointThread(UIManager::threadEntry, this);
 
 	showMenu();
 	while (!terminate)
@@ -321,7 +375,12 @@ bool UIManager::manage() {
 			terminate = true;
 			break;
 		case FSKEY_L:
-			loadPointCloudFile();
+			//loadPointThread(threadEntry, this);
+			isLoadFinish = false;
+			fileName = DrawingUtilNG::getStringFromScreen("Enter name of file to load.",
+				"Press ENTER when done, ESC to cancel.");
+			startLoadFile = true;
+			//drawLoadingPage();
 			showMenu(); // So that it is "fresh"
 			break;
 		case FSKEY_SPACE:
@@ -401,7 +460,9 @@ bool UIManager::manage() {
 		glEnable(GL_POLYGON_OFFSET_FILL);
 		glPolygonOffset(1, 1);
 
-		pre.drawPoint(data3D);
+		if (isLoadFinish) {
+			pre.drawPoint(data3D);
+		}
 
 		if (!isDisPlayMode) {
 			cameraController.drawCameraKeyFrame(true);
@@ -422,6 +483,15 @@ bool UIManager::manage() {
 		if (showAdvanceMenu) {
 			drawAdvanceMeau();
 			//advanceMenuButtons.checkHover(screenX, screenY);
+		}
+
+		if (startLoadFile == true && isLoadFinish == false) {
+			loadingString += ".";
+			if (loadingString.size() > 30) {
+				loadingString = loadingString.substr(0, 20);
+			}
+			comicsans.setColorHSV(0, 1, 1);
+			comicsans.drawText(loadingString , winWidth / 2, winHeight / 2, .25);
 		}
 
 		//display coords of mouse

@@ -48,6 +48,10 @@ private:
 	// if show advance menu
 	bool showAdvanceMenu = false;
 
+	//thread
+	//thread loadPointThread;
+	bool startLoadFile = false;
+	bool isLoadFinish = false;
 	// buttons
 	ButtonCollection mainButtons;
 	ButtonCollection advanceMenuButtons;
@@ -101,4 +105,9 @@ protected:
 
 	// draw advance meau
 	void drawAdvanceMeau();
+
+	static void threadEntry(UIManager* thisPtr);
+
+	void drawLoadingPage(void);
+
 };
