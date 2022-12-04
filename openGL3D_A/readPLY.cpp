@@ -4,7 +4,7 @@ void readPLY::init(std::string file)
 {
 	
 	plycpp::PLYData data;
-	plycpp::load("flowers.ply", data);
+	plycpp::load(file, data);
 
 	auto vertexElement = data["vertex"];
 
