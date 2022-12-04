@@ -19,7 +19,7 @@ UIManager::UIManager(int width, int height)
 	FsOpenWindow(16, 16, winWidth, winHeight, 1, "3D Pointcloud Visualization Video Generator");
 
 	//screenFont = new ComicSansFont;
-	screenFont = new CourierNewFont;
+	screenFont = new TimesNewRomanFont;
 
 	// set color and width
 	glColor3b(255, 0, 0);  // red
@@ -135,13 +135,7 @@ void UIManager::addAdvanceButtons(GraphicFont* aFont, int xLoc, int yLoc)
 	currX += spacing + buttonWid;
 	advanceMenuButtons.add(currX, currY, buttonWid, buttonHei, FSKEY_P, "Preview", aFont);
 
-	GraphicFont* buttonFont = new ArialFont;
-	buttonFont->setColorRGB(255, 0, 0); // red
-	currX += spacing + buttonWid;
-	advanceMenuButtons.add(currX + 40, currY, buttonHei / 1.5, buttonHei / 1.5, FSKEY_M, " X ", buttonFont);
-
-
-	currX = currX - 2 * buttonWid - spacing * 2;
+	currX = currX - buttonWid - spacing;
 	currY += spacing + buttonHei;
 	advanceMenuButtons.add(currX, currY, buttonWid, buttonHei, FSKEY_R, "Set Identitiy", aFont);
 
@@ -260,9 +254,9 @@ void UIManager::drawLoadingPage(void)
 void UIManager::drawAdvanceMeau()
 {
 	glColor3ub(255, 255, 255);
-	DrawingUtilNG::drawRectangle(winWidth * 0.38, winHeight * 0.38, winWidth *0.3, winHeight*0.2, true);
+	DrawingUtilNG::drawRectangle(winWidth * 0.385, winHeight * 0.38, winWidth * 0.25, winHeight * 0.2, true);
 	glColor3ub(0, 0, 0);
-	DrawingUtilNG::drawRectangle(winWidth * 0.38, winHeight * 0.38, winWidth * 0.3, winHeight * 0.2, false);
+	DrawingUtilNG::drawRectangle(winWidth * 0.385, winHeight * 0.38, winWidth * 0.25, winHeight * 0.2, false);
 
 	advanceMenuButtons.paint();
 
