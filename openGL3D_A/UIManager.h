@@ -1,12 +1,4 @@
 #pragma once
-/*
-Nestor Gomez
-Carnegie Mellon University
-Eng. Computation, 24-780-B
-Prob Set 9
-Due Tues. Nov. 22, 2022
-*/
-
 #include <vector>
 #include <fstream>
 

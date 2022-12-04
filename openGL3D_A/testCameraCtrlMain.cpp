@@ -27,13 +27,6 @@ int main(void)
 	// set up UI manager
 	UIManager theManager(1600, 900);
 	theManager.manage();
-	//while (theManager.manage()) {
-	//	// actually display graphics
-	//	FsSwapBuffers();
-
-	//	// prepare for next loop
-	//	FsSleep(25);
-	//}
 
 	return 0;
 }

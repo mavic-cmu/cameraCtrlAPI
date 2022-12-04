@@ -924,6 +924,3 @@ std::string DrawingUtilNG::getStringFromScreen(const std::string& prompt1,
 		return "";
 
 }
-
-/*
-*/
