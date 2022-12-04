@@ -141,103 +141,6 @@ void UIManager::paintEditIndicator()
 }
 
 
-//void TrackManager::manageMouse()
-//{
-//	// handle mouse input (OpenGL is still in screen coords)
-//	stringstream coordStream;     // for displaying coordinates on screen
-//	FsPollDevice();
-//	mouseEvent = FsGetMouseEvent(leftButton, middleButton,
-//		rightButton, screenX, screenY);
-//
-//	Point2D worldPnt = getWorldCoords({ screenX * 1.f, screenY * 1.f });
-//
-//	if (leftButton) { // write coords on screen if left button is held down
-//		coordStream.str("");  // reset stream
-//		coordStream.precision(4);
-//		coordStream << worldPnt.x << ", " << worldPnt.y
-//			<< " (" << screenX << ", " << screenY << ")";
-//		glColor3ub(60, 230, 60);
-//		glRasterPos2i(screenX, screenY - 3);  // set position 3 pix above
-//		YsGlDrawFontBitmap7x10(coordStream.str().c_str());
-//	}
-//
-//	if (inEditMode) {
-//		float hoverDistance = 3.f / scale; // 3 pixels
-//
-//		//if (mouseEvent == FSMOUSEEVENT_RBUTTONDOWN) {
-//		//	// put whatever code is needed to indicate if right click 
-//		//	// is inside or outside of current shape
-//		//	if (theShapes.at(currShape).isContained(worldPnt)) {
-//		//		theSoundPlayer.PlayOneShot(insideSound);
-//		//	}
-//		//	else 
-//		//		theSoundPlayer.PlayOneShot(outsideSound);
-//		//}
-//
-//		// figure out if there's a point near mouse location
-//		if (!vertexIsMoving) { // avoid changing currVertex while moving a vertex
-//			currVertex = theTrack.getIndex(worldPnt, hoverDistance);
-//			//if (currVertex > 0)
-//			//	cout << "Hovered over Pnt " << currVertex << endl;
-//		}
-//		if (mouseEvent == FSMOUSEEVENT_LBUTTONUP) {
-//			vertexIsMoving = false;
-//		}
-//		else if (leftButton && mouseEvent == FSMOUSEEVENT_MOVE && currVertex > 0) {
-//			vertexIsMoving = true;
-//			theTrack.movePoint(worldPnt, currVertex);
-//		}
-//	}
-//
-//	// capture location of first button press (needed for panning and zooming)
-//	if (mouseEvent == FSMOUSEEVENT_LBUTTONDOWN || mouseEvent == FSMOUSEEVENT_MBUTTONDOWN) {
-//		prevScreenX = screenX; prevScreenY = screenY;
-//	}
-//
-//	// disallow panning and zooming with mouse when a vertex is moving
-//	if (!vertexIsMoving) {
-//
-//		// pan in x and y axes when Ctrl key is held down and left button is down
-//		// note: I added middle button (wheel) drag for panning
-//		if (middleButton || (FsGetKeyState(FSKEY_CTRL) && leftButton)) {
-//			// no need for scale since the screen-to-model ratio is not applicable
-//			panX += (screenX - prevScreenX);
-//			panY += (screenY - prevScreenY);
-//			prevScreenX = screenX; prevScreenY = screenY; // reset previous values to continue move
-//		}
-//
-//		// zoom in and out when Shft key is held down and left button is down
-//		// note: I added wheel rolling for zoomimg, which accidentally is also
-//		//       triggered by touchpad pinch and two finger scroll
-//		else if (key == FSKEY_WHEELUP || key == FSKEY_WHEELDOWN
-//			|| (FsGetKeyState(FSKEY_SHIFT) && leftButton)) {
-//			double oldScale = scale;
-//			if (key == FSKEY_WHEELUP)
-//				scale *= 1.03; // less jumpy than zooming with +/- keys
-//			else if (key == FSKEY_WHEELDOWN)
-//				scale /= 1.02;
-//			else if (screenY < prevScreenY)
-//				scale *= max(1.02, (prevScreenY - screenY) * 0.1);
-//			else if (screenY > prevScreenY)
-//				scale /= max(1.02, (prevScreenY - screenY) * -0.1);
-//
-//			// adjust panX and panY so point under mouse does not move
-//			// i.e., we can zoom in/out on a specific point
-//			// a bit complicated since you have to convert old origin to screen coords
-//			// then adjust pan, then convert to model coords. 
-//			// what you see below is the simplified equation after all substitutions
-//			// rounding reduces "shifting"
-//			if (key == FSKEY_WHEELUP || key == FSKEY_WHEELDOWN) {
-//				panX = (int)round((screenX * (oldScale - scale)
-//					+ panX * scale) / oldScale);
-//				panY = (int)round((screenY * (oldScale - scale)
-//					+ panY * scale) / oldScale);
-//			}
-//			prevScreenX = screenX; prevScreenY = screenY; // reset previous values to continue move
-//		}
-//	}
-//}
-
 void UIManager::addMainButtons(GraphicFont* aFont, int xLoc, int wid)
 {
 	int hei = 40;
@@ -376,40 +279,6 @@ bool UIManager::manage() {
 	Campos currCamPos;
 	Point currCamPoint;
 	int buttonKey;
-	//vector<Point> generatedTraj;
-
-	//data3D.init("flowers.ply");
-	//cout << endl;
-	//// Example how to access the data, first element
-	//std::cout << "x value of the first vertex element: " << data3D.thePoint.x->at<float>(0) << std::endl;
-	//std::cout << "y value of the first vertex element: " << data3D.thePoint.y->at<float>(0) << std::endl;
-	//std::cout << "z value of the first vertex element: " << data3D.thePoint.z->at<float>(0) << std::endl;
-	//std::cout << "nx value of the first vertex element: " << data3D.thePoint.nx->at<float>(0) << std::endl;
-	//std::cout << "ny value of the first vertex element: " << data3D.thePoint.ny->at<float>(0) << std::endl;
-	//std::cout << "nz value of the first vertex element: " << data3D.thePoint.nz->at<float>(0) << std::endl;
-	//std::cout << "r value of the first vertex element: " << static_cast<unsigned int>(data3D.thePoint.r->at<unsigned char>(0)) << std::endl;
-	//std::cout << "g value of the first vertex element: " << static_cast<unsigned int>(data3D.thePoint.g->at<unsigned char>(0)) << std::endl;
-	//std::cout << "b value of the first vertex element: " << static_cast<unsigned int>(data3D.thePoint.b->at<unsigned char>(0)) << std::endl;
-	//std::cout << "alpha value of the first vertex element: " << static_cast<unsigned int>(data3D.thePoint.alpha->at<unsigned char>(0)) << std::endl;
-	//std::cout << "vertex size: " << data3D.thePoint.size << std::endl;
-
-	/*const int percentPrint = 5;
-	int step = data3D.thePoint.size / (100 / percentPrint);
-	int nextPrint = step;
-
-	pre.convert3Dpoint(data3D);
-	pre.getallvalue();
-	pre.PointDownsize(0, 4);*/
-
-	//for (int i = 0; i < data3D.thePoint.size; i++) {
-	//	if (i >= nextPrint)
-	//	{
-	//		double percent = (100 * i) / data3D.thePoint.size;
-	//		std::cout << "\r" << "paint PLY progress: " << std::string(percent / percentPrint, '|') << percent << "%";
-	//		std::cout.flush();
-	//		nextPrint += step;
-	//	}
-	//}
 
 	showMenu();
 	while (!terminate)
@@ -567,7 +436,7 @@ bool UIManager::manage() {
 			cameraController.onMouseClick(screenX, screenY, 0);
 		}
 
-		////play mode
+		//play mode
 		if (isDisPlayMode) {
 			traj.genTraj(1);
 			generatedTraj = traj.getTraj();
