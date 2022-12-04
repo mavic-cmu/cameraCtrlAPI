@@ -10,6 +10,8 @@ tools to help you do that. If you develop an additional font, share
 with me so that this library grows.
 
 */
+#pragma warning(disable:4996)
+
 #include <vector>
 #include "fssimplewindow.h"
 #include "yspng.h"
@@ -54,13 +56,13 @@ public:
 	// function is called after filenames are settled by child classes
 	void init();
 
+	int getLetterHeight() { return letterHei; }
+
 	// sets the color (RGV) that the text will be drawn in, 
 	// but does NOT set the current color in OpenGL
 	void setColorRGB(double r, double g, double b, double a = 1.) {
 		red = r; green = g; blue = b; alpha = a;
 	}
-
-	int getLetterHeight() { return letterHei; }
 
 	// sets the color (HSV) that the text will be drawn in, 
 	// but does NOT set the current color in OpenGL
@@ -69,12 +71,16 @@ public:
 		alpha = a;
 	}
 
+	void setFade(double a) { alpha = a; }
+
 	// draws text on screen at location given (lower left of text),
 	// at given scale (use negative to mirror image letters),
 	// at theta angle given (in degrees CCW, zero is to right),
 	// using color set in setColor() function
 	void drawText(const std::string& aString, double locX, double locY,
-		double scale = 1., double theta = 0.);
+		double scale = 1., double theta = 0., bool centered = false);
+
+	double getWordWidth(const std::string& aString, double scale = 1.);
 
 	// draws text on screen in a circle, centered at location given,
 	// with given radius, at given scale (use negative to mirror image letters),
@@ -152,6 +158,23 @@ public:
 	OldEnglishFont() {
 		dataFileName = "OldEnglishFont01.txt";
 		imageFileName = "OldEnglishFont01.png";
+		init();
+	}
+};
+class CourierNewFont : public GraphicFont {
+public:
+	CourierNewFont() {
+		dataFileName = "CourierNewFont01.txt";
+		imageFileName = "CourierNewFont01.png";
+		init();
+	}
+};
+ 
+class ArialFont : public GraphicFont {
+public:
+	ArialFont() {
+		dataFileName = "ArialFont01.txt";
+		imageFileName = "ArialFont01.png";
 		init();
 	}
 };

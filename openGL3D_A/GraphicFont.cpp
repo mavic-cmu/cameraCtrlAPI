@@ -3,12 +3,14 @@
 #include <iostream>
 #include <fstream>
 #include "fssimplewindow.h"
+#include "DrawingUtilNG.h"
 #include "GraphicFont.h"
 
 using namespace std;
 using namespace DrawingUtilNG;
 
-void GraphicFont::drawText(const string& aString, double locX, double locY, double scale, double theta)
+void GraphicFont::drawText(const string& aString, double locX, double locY, 
+	double scale, double theta, bool centered)
 {
 	glColor4d(red, green, blue, alpha);
 	// enable texture mapping
@@ -21,6 +23,15 @@ void GraphicFont::drawText(const string& aString, double locX, double locY, doub
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+	if (centered) {
+		float width = getWordWidth(aString, scale);
+		// rotating a vector from center of text to bottom of text box
+		// about a vector normal to x-y plane 
+		auto rotatedOrigin = rotateVector({ -width / 2.f, -letterHei * float(scale) / 2.f, 0 },
+			{ 0, 0, 1 }, theta);
+		locX += rotatedOrigin.x;
+		locY -= rotatedOrigin.y;
+	}
 	// draw the letters
 	for (int i = 0; i < aString.length(); i++) {
 		drawLetter(aString[i], locX, locY, scale, theta);
@@ -31,6 +42,17 @@ void GraphicFont::drawText(const string& aString, double locX, double locY, doub
 	// turn off texture 
 	glDisable(GL_TEXTURE_2D);
 
+}
+
+double GraphicFont::getWordWidth(const std::string& aString, double scale)
+{
+	double sumWidth = 0;
+	int index;
+	for (int i = 0; i < aString.length(); i++) {
+		index = aString[i] - firstLetter;
+		sumWidth += (fontCoords[index].x2 - fontCoords[index].x1);
+	}
+	return sumWidth * scale;
 }
 
 void GraphicFont::drawTextCircle(const std::string& aString, double centerX, double centerY,

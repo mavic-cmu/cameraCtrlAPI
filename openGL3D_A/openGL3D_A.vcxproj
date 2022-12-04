@@ -125,21 +125,25 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ButtonCollection.cpp" />
     <ClCompile Include="Camera3D.cpp" />
     <ClCompile Include="CameraUIInterface.cpp" />
     <ClCompile Include="DrawingUtilNG.cpp" />
     <ClCompile Include="plycpp.cpp" />
     <ClCompile Include="preProcess.cpp" />
     <ClCompile Include="readPLY.cpp" />
+    <ClCompile Include="StringPlus.cpp" />
     <ClCompile Include="testCameraCtrlMain.cpp" />
     <ClCompile Include="fssimplewindow.cpp" />
     <ClCompile Include="GraphicFont.cpp" />
     <ClCompile Include="trajGenerator.cpp" />
+    <ClCompile Include="UIManager.cpp" />
     <ClCompile Include="utils.cpp" />
     <ClCompile Include="ysglfontdata.c" />
     <ClCompile Include="yspng.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ButtonCollection.h" />
     <ClInclude Include="Camera3D.h" />
     <ClInclude Include="CameraUIInterface.h" />
     <ClInclude Include="DrawingUtilNG.h" />
@@ -148,7 +152,9 @@
     <ClInclude Include="plycpp.h" />
     <ClInclude Include="preProcess.h" />
     <ClInclude Include="readPLY.h" />
+    <ClInclude Include="StringPlus.h" />
     <ClInclude Include="trajGenerator.h" />
+    <ClInclude Include="UIManager.h" />
     <ClInclude Include="utils.h" />
     <ClInclude Include="ysglfontdata.h" />
     <ClInclude Include="yspng.h" />

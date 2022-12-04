@@ -1,6 +1,14 @@
+/*
+ 
+Tools for OpenGL drawing
+Nestor Gomez, Carnegie Mellon Univ.
+24-780 Engr. Computation
+Last updated: Nov. 11, 2022
+
+*/
+
 #pragma once
 #include <string>
-
 //#include "GraphicFont.h"
 class GraphicFont;   // needed because GraphicFont.h includes DrawingUtilNG.h
 
@@ -15,7 +23,7 @@ namespace DrawingUtilNG {
 	float getDistance(vertexF v1, vertexF v2);
 
 	// vector functions, hopefully unambiguously named
-	float vectorLength(vertexF v0);
+	float vectorLength(vertexF v0); 
 	vertexF getUnitVector(vertexF v0);
 	vertexF getUnitVector(vertexF v1, vertexF v2);
 	vertexF vectorSum(vertexF v1, vertexF v2);
@@ -23,17 +31,17 @@ namespace DrawingUtilNG {
 	vertexF scalarProduct(vertexF v0, float scalar);
 	float dotProduct(vertexF v1, vertexF v2);
 	vertexF crossProduct(vertexF v1, vertexF v2);
-
+	
 	// rotate vector v by theta degrees about vector k
 	// uses Rodrigues' Rotation Formula (see Wikipedia)
-	vertexF rotateVector(vertexF v, vertexF k, float theta);
+	vertexF rotateVector(vertexF v, vertexF k, float theta); 
 
 	// draws common shapes, filled in or not
 	// if outerSizes are given (not negative) use sizes to create a hole instead of shape
 	//    and outerSize to draw the filled-in part.
 	void drawCircle(double centerX, double centerY, double sizeX, double sizeY, bool filled,
 		double outerSizeX = -1, double outerSizeY = -1);
-	void drawRectangle(double x, double y, int sizeX, int sizeY, bool filled,
+	void drawRectangle(double x, double y, double sizeX, double sizeY, bool filled,
 		double outerSizeX = -1, double outerSizeY = -1);
 
 	// many-pointed start, given outer and inner size, startAngle assures one
@@ -44,13 +52,19 @@ namespace DrawingUtilNG {
 	// draws self-connecting star gram. (e.g., pentagram, star-of-david, etc)
 	void drawStarGram(double centerX, double centerY,
 		double size, int numbPoints, int numbSkip, double startAngle, bool filled);
-
+	
 	// takes over the screen and allows graphical text input
 	bool buildStringFromFsInkey(int key, std::string& currString);
 
-	//converts a color model from HSV (degrees, 0-1., 0-1.) to RGB (3 values 0-1.
+	std::string getStringFromScreen(const std::string& prompt1 = "",
+		const std::string& prompt2 = "", const std::string& prompt3 = "");
+
+	//converts a color model from HSV (degrees, 0.-1., 0.-1.) to RGB (3 values 0.-1.)
 	bool hsv2rgb(double H, double S, double V,
 		double& red, double& green, double& blue);
+	
+	//converts a color model from RGB (3 values 0.-1.) to HSV (degrees, 0.-1., 0.-1.)
+	bool rgb2hsv(double red, double green, double blue, double &H, double &S, double &V);
 
 	//// quick writing with fancy fonts, but requires GLUT library
 	//void writeHelvetica(std::string outString, int locX, int locY, int size);
@@ -61,7 +75,7 @@ namespace DrawingUtilNG {
 		int r = 0, int g = 0, int b = 0);
 
 	// draw 3D shapes
-
+	
 	// draws orthogonal cube, with opposing corners at locations v1 and v2
 	// use sixColors to see which face is which
 	void drawCube(vertexF v1, vertexF v2, bool sixColors = false);
@@ -74,7 +88,7 @@ namespace DrawingUtilNG {
 	// draws 20-faced sphere (still in development)
 	void drawSphere(vertexF center, float radius);
 	void drawSphere(vertexF center, vertexF northPole);
-	void drawSphere(float centerX, float centerY, float centerZ,
+	void drawSphere(float centerX, float centerY, float centerZ, 
 		float northX, float northY, float northZ);
 	void drawSphere(float centerX, float centerY, float centerZ, float radius);
 

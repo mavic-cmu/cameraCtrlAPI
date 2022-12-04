@@ -4,9 +4,10 @@
 //#include "GL\glut.h"
 #include <vector>
 #include "fssimplewindow.h"
+
+#include "DrawingUtilNG.h" // this one HAS to be before #include "GraphicFont.h"
 #include "GraphicFont.h"
 
-#include "DrawingUtilNG.h"
 
 
 using namespace DrawingUtilNG;
@@ -145,7 +146,7 @@ void DrawingUtilNG::drawCircle(double centerX, double centerY,
 }
 
 void DrawingUtilNG::drawRectangle(double x, double y,
-	int sizeX, int sizeY, bool filled, double outerSizeX, double outerSizeY)
+	double sizeX, double sizeY, bool filled, double outerSizeX, double outerSizeY)
 {
 	if (outerSizeX < 0 || outerSizeY < 0) {
 		if (filled)
@@ -153,10 +154,10 @@ void DrawingUtilNG::drawRectangle(double x, double y,
 		else
 			glBegin(GL_LINE_LOOP);
 
-		glVertex2i(x, y);
-		glVertex2i(x + sizeX, y);
-		glVertex2i(x + sizeX, y + sizeY);
-		glVertex2i(x, y + sizeY);
+		glVertex2d(x, y);
+		glVertex2d(x + sizeX, y);
+		glVertex2d(x + sizeX, y + sizeY);
+		glVertex2d(x, y + sizeY);
 
 		glEnd();
 	}
@@ -331,6 +332,52 @@ void DrawingUtilNG::drawStarGram(double centerX, double centerY, double size,
 //DrawingUtilNG::drawStarGram(550, 180, 70, 9, 1, 90, false);
 //DrawingUtilNG::drawStar(400, 400, 95, 40, 8, 0, false);
 
+bool DrawingUtilNG::rgb2hsv(double r, double g, double b,
+	double& hue, double& saturation, double& value)
+{
+	using namespace std;
+
+	// using approach from 
+	// https://www.geeksforgeeks.org/program-change-rgb-color-model-hsv-color-model/
+
+	double tolerance = 1e-7;
+
+	// h, s, v = hue, saturation, value 
+
+	double cmax = max(r, max(g, b)); // maximum of r, g, b 
+	double cmin = min(r, min(g, b)); // minimum of r, g, b 
+	double diff = cmax - cmin; // diff of cmax and cmin. 
+	hue = -1;
+	saturation = -1;
+
+	// if cmax and cmin are equal then hue = 0 
+	if (fabs(cmax - cmin) < tolerance)
+		hue = 0.f;
+
+	// if cmax equals r then compute hue 
+	else if (fabs(cmax - r) < tolerance)
+		hue = fmod(60. * ((g - b) / diff) + 360., 360.);
+
+	// if cmax equal g then compute hue 
+	else if (fabs(cmax - g) < tolerance)
+		hue = fmod(60 * ((b - r) / diff) + 120., 360.);
+
+	// if cmax equal b then compute hue 
+	else if (fabs(cmax - b) < tolerance)
+		hue = fmod(60 * ((r - g) / diff) + 240., 360.);
+
+	// if cmax equal zero 
+	if (fabs(cmax) < tolerance)
+		saturation = 0.;
+	else
+		saturation = (diff / cmax);
+
+	// compute value
+	value = cmax;
+	//std::cout << "(" << hue << " " << saturation << " " << v << ")" << endl;
+
+	return true;
+}
 
 bool DrawingUtilNG::hsv2rgb(double H, double S, double V, double& red, double& green, double& blue)
 {
@@ -679,10 +726,10 @@ bool DrawingUtilNG::buildStringFromFsInkey(int key, std::string& currString)
 {
 	bool shiftIsOn = FsGetKeyState(FSKEY_SHIFT);;
 
-	// get key input (may want to move this someplace else for re-use)
+	// get key input and update the given string
 
 	if (FSKEY_A <= key && key <= FSKEY_Z) {
-		int adjustLetter = shiftIsOn ? 0 : 32;
+		int adjustLetter = shiftIsOn ? 0 : int('a') - int('A');
 		currString += char(int('A') + key - FSKEY_A + adjustLetter);
 	}
 	else if (FSKEY_0 <= key && key <= FSKEY_9) {
@@ -692,6 +739,9 @@ bool DrawingUtilNG::buildStringFromFsInkey(int key, std::string& currString)
 		}
 		else
 			currString += char(int('0') + key - FSKEY_0);
+	}
+	else if (FSKEY_TEN0 <= key && key <= FSKEY_TEN9) { // for the number keypad (on some computers)
+		currString += char(int('0') + key - FSKEY_TEN0);
 	}
 	else {
 		// note that since switch jumps to proper case, 
@@ -746,7 +796,7 @@ bool DrawingUtilNG::buildStringFromFsInkey(int key, std::string& currString)
 			break;
 		case FSKEY_BACKSLASH:
 			if (shiftIsOn)
-				currString += "|";
+				currString += "|";  // pipe
 			else
 				currString += "\\"; // backslash
 			break;
@@ -760,7 +810,7 @@ bool DrawingUtilNG::buildStringFromFsInkey(int key, std::string& currString)
 			if (shiftIsOn)
 				currString += "\""; // double quote
 			else
-				currString += "'";
+				currString += "'"; // single quote
 			break;
 		case FSKEY_SLASH:
 			if (shiftIsOn)
@@ -772,7 +822,22 @@ bool DrawingUtilNG::buildStringFromFsInkey(int key, std::string& currString)
 			if (shiftIsOn)
 				currString += "~";
 			else
-				currString += "`";
+				currString += "`"; // inverse single quote
+			break;
+		case FSKEY_TENDOT:
+			currString += ".";
+			break;
+		case FSKEY_TENSLASH:
+			currString += "/";
+			break;
+		case FSKEY_TENSTAR:
+			currString += "*";
+			break;
+		case FSKEY_TENMINUS:
+			currString += "-";
+			break;
+		case FSKEY_TENPLUS:
+			currString += "+";
 			break;
 
 		}
@@ -780,3 +845,77 @@ bool DrawingUtilNG::buildStringFromFsInkey(int key, std::string& currString)
 	return true; // may use this later ???
 }
 
+std::string DrawingUtilNG::getStringFromScreen(const std::string& prompt1,
+	const std::string& prompt2, const std::string& prompt3)
+{
+	int key;
+	int xloc = 140, yloc = 200, vspace = 40;
+	std::string inputString = ""; // probably don't need this initialization
+	ArialFont arial;
+	double fscale = 0.3;
+	FsPollDevice();
+	key = FsInkey();
+	while (key != FSKEY_ESC && key != FSKEY_ENTER) {
+		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+
+		// ask for input from the graphics window 
+		// (using GraphicFont or ysgfontdata, comment/uncomment as needed)
+		yloc = 100;
+		//glColor3f(0, 0, 0);
+		arial.setColorRGB(0., 0., 0.);
+		if (prompt1.length() > 0) {
+			//glRasterPos2d(xloc, yloc - 10);
+			//YsGlDrawFontBitmap16x20(prompt1.c_str());
+
+			arial.drawText(prompt1, xloc, yloc, fscale);
+			yloc += vspace;
+			if (prompt2.length() > 0) {
+				//glRasterPos2d(xloc, yloc - 10);
+				//YsGlDrawFontBitmap16x20(prompt1.c_str());
+
+				arial.drawText(prompt2, xloc, yloc, fscale);
+				yloc += vspace;
+				if (prompt3.length() > 0) {
+					//glRasterPos2d(xloc, yloc - 10);
+					//YsGlDrawFontBitmap16x20(prompt3.c_str());
+
+					arial.drawText(prompt3, xloc, yloc, fscale);
+					yloc += vspace;
+				}
+			}
+		}
+		// input box
+		yloc += 15;
+		glColor3ub(255, 0, 255);
+		DrawingUtilNG::drawRectangle(xloc, yloc - 40, 450, 50, false);
+
+		// build string from keyboard entry, letter by letter
+		DrawingUtilNG::buildStringFromFsInkey(key, inputString);
+
+		inputString += "_"; // add an underscore as prompt
+
+		//glRasterPos2i(xloc+10, yloc);  // sets position
+		//YsGlDrawFontBitmap16x24(inputString.c_str());
+
+		arial.setColorRGB(1., 0., 1.);
+		arial.drawText(inputString, 150, yloc, fscale);
+
+		inputString = inputString.substr(0, inputString.length() - 1); // remove underscore
+
+		FsSwapBuffers();
+		FsSleep(25);
+
+		FsPollDevice();
+		key = FsInkey();
+	}
+
+	if (key == FSKEY_ENTER) {
+		return inputString;
+	}
+	else
+		return "";
+
+}
+
+/*
+*/
