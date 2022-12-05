@@ -1,7 +1,22 @@
 #include "preProcess.h"
 
+
+
+
+void preProcess::initPointcloud()
+{
+    lowerBound = { -INFINITY, -INFINITY,-INFINITY };
+    upperBound = { -INFINITY, -INFINITY,-INFINITY };
+    midPoint = { -INFINITY, -INFINITY,-INFINITY };
+    Converted_3Dpoint.clear();
+    Point_downsize.clear();
+    PointShow.clear();
+    std::cout << "init completed " << endl;
+}
+
 void preProcess::convert3Dpoint(readPLY& data)
 {
+    initPointcloud();
     Point3D_data temp; // set a variable to store each set of struct
     for (int i = 0; i < data.thePoint.size; i++) {
         temp.x = data.thePoint.x->at<float>(i);
@@ -15,6 +30,7 @@ void preProcess::convert3Dpoint(readPLY& data)
         temp.b = data.thePoint.b->at<unsigned char>(i);
         temp.alpha = data.thePoint.alpha->at<unsigned char>(i);
         Converted_3Dpoint.push_back(temp);
+        PointShow.push_back(temp);
     }
     std::cout << "convert finish " << endl;
 }
@@ -85,9 +101,10 @@ void preProcess::reCenter()
     midPoint = { 0,0,0 };
 }
 
-void preProcess::PointDownsize( int density = 0, int ratio_set = 0)
+void preProcess::PointDownsize(int density = 0, int ratio_set = 0)
 {
     int ratio = 0;
+    PointShow.clear();
     if (ratio_set == 0 && density != 0)
         ratio = Converted_3Dpoint.size() / density;
     else if (density == 0 && ratio_set != 0) {
@@ -95,16 +112,16 @@ void preProcess::PointDownsize( int density = 0, int ratio_set = 0)
     }
     else
         cout << "Worng input" << endl;
-        
+
     if (ratio >= 1) {
         Point3D_data temp;
         for (int i = 0; i < Converted_3Dpoint.size(); i++) {
-            if ((i % ratio) == 0) 
-                Point_downsize.push_back(Converted_3Dpoint[i]);
+            if ((i % ratio) == 0)
+                PointShow.push_back(Converted_3Dpoint[i]);
         }
-        cout << "After downsizing, the size of the pointcloud is: " << Point_downsize.size() << endl;
+        cout << "After downsizing, the size of the pointcloud is: " << PointShow.size() << endl;
         cout << "The downsize ratio is: " << ratio << endl;
-        Converted_3Dpoint = Point_downsize;
+        Converted_3Dpoint = PointShow;
     }
 }
 
@@ -112,25 +129,90 @@ float preProcess::findMid(vector<float> array) {
     float median;
     std::sort(array.begin(), array.end(), std::greater<>());
     if ((array.size() % 2) == 0)
-        median = array[array.size()/2];
+        median = array[array.size() / 2];
     else
-        median = array[array.size() / 2-1];
+        median = array[array.size() / 2 - 1];
     return median;
 }
 
 void preProcess::drawPoint(readPLY& data)
 {
-    
+
     glBegin(GL_POINTS);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glPointSize(1);
-    for (int i = 0; i < Point_downsize.size(); i++) {
-        glColor4ub((int)Point_downsize[i].r, (int)Point_downsize[i].g, (int)Point_downsize[i].b, (int)Point_downsize[i].alpha);
-        glVertex3f(Point_downsize[i].x, Point_downsize[i].y, Point_downsize[i].z);
+    for (int i = 0; i < PointShow.size(); i++) {
+        glColor4ub((int)PointShow[i].r, (int)PointShow[i].g, (int)PointShow[i].b, (int)PointShow[i].alpha);
+        glVertex3f(PointShow[i].x, PointShow[i].y, PointShow[i].z);
     }
     glEnd();
-    
+
+}
+
+void preProcess::PointShow_reset() {
+    PointShow.clear();
+    for (int i = 0; i < Converted_3Dpoint.size(); i++) {
+        PointShow.push_back(Converted_3Dpoint[i]);
+    }
+
+}
+
+bool PointCompWithX(Point3D_data x, Point3D_data y)
+{
+    return x.x < y.x;
+}
+
+bool PointCompWithY(Point3D_data x, Point3D_data y)
+{
+    return x.y < y.y;
+}
+
+bool PointCompWithZ(Point3D_data x, Point3D_data y)
+{
+    return x.z < y.z;
+}
+
+void preProcess::sudoColor(string axis_str = "", bool if_one_color = FALSE, int red = 0, int green = 0, int blue = 0)
+{
+    if (if_one_color == TRUE) {
+        std::cout << "single color mode enable" << endl;
+        for (int i = 0; i < PointShow.size(); i++) {
+            PointShow[i].r = red;
+            PointShow[i].g = green;
+            PointShow[i].b = blue;
+        }
+    }
+    else {
+        float PI = 3.14159265;
+        int width = 127, center = 128;
+        float frequency = 2 * PI / PointShow.size();
+        std::cout << "rainbow color mode enable" << endl;
+        if (axis_str == "x") {
+            std::sort(PointShow.begin(), PointShow.end(), PointCompWithX);
+        }
+        else if (axis_str == "y") {
+            std::sort(PointShow.begin(), PointShow.end(), PointCompWithY);
+        }
+        else if (axis_str == "z") {
+            std::sort(PointShow.begin(), PointShow.end(), PointCompWithZ);
+        }
+
+
+        for (int i = 0; i < PointShow.size(); i++) {
+
+            int red = (int)(sin(frequency * i + 0) * width + center);
+            int green = (int)(sin(frequency * i + 2) * width + center);
+            int blue = (int)(sin(frequency * i + 4) * width + center);
+                  
+            PointShow[i].r = red;
+            PointShow[i].g = green;
+            PointShow[i].b = blue;
+
+        }
+    }
+
+
 }
 
 void preProcess::getallvalue() {
