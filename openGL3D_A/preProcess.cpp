@@ -105,6 +105,7 @@ void preProcess::PointDownsize(int density = 0, int ratio_set = 0)
 {
     int ratio = 0;
     PointShow.clear();
+    Point_downsize.clear();
     if (ratio_set == 0 && density != 0)
         ratio = Converted_3Dpoint.size() / density;
     else if (density == 0 && ratio_set != 0) {
@@ -116,12 +117,14 @@ void preProcess::PointDownsize(int density = 0, int ratio_set = 0)
     if (ratio >= 1) {
         Point3D_data temp;
         for (int i = 0; i < Converted_3Dpoint.size(); i++) {
-            if ((i % ratio) == 0)
+            if ((i % ratio) == 0) {
                 PointShow.push_back(Converted_3Dpoint[i]);
+                Point_downsize.push_back(Converted_3Dpoint[i]);
+            }
+
         }
         cout << "After downsizing, the size of the pointcloud is: " << PointShow.size() << endl;
         cout << "The downsize ratio is: " << ratio << endl;
-        Converted_3Dpoint = PointShow;
     }
 }
 
@@ -150,12 +153,21 @@ void preProcess::drawPoint(readPLY& data)
 
 }
 
-void preProcess::PointShow_reset() {
-    PointShow.clear();
-    for (int i = 0; i < Converted_3Dpoint.size(); i++) {
-        PointShow.push_back(Converted_3Dpoint[i]);
-    }
+void preProcess::PointShow_reset(bool only_color = FALSE) {
 
+    if (only_color == TRUE) {
+        PointShow = Point_downsize;
+
+    }
+    else {
+        PointShow.clear();
+        Point_downsize.clear();
+        for (int i = 0; i < Converted_3Dpoint.size(); i++) {
+            PointShow.push_back(Converted_3Dpoint[i]);
+            Point_downsize.push_back(Converted_3Dpoint[i]);
+        }
+    }
+    if_color = FALSE;
 }
 
 bool PointCompWithX(Point3D_data x, Point3D_data y)
@@ -204,16 +216,17 @@ void preProcess::sudoColor(string axis_str = "", bool if_one_color = FALSE, int 
             int red = (int)(sin(frequency * i + 0) * width + center);
             int green = (int)(sin(frequency * i + 2) * width + center);
             int blue = (int)(sin(frequency * i + 4) * width + center);
-                  
+
             PointShow[i].r = red;
             PointShow[i].g = green;
             PointShow[i].b = blue;
 
         }
     }
-
-
+    if_color = TRUE;
 }
+
+
 
 void preProcess::getallvalue() {
 
@@ -225,4 +238,14 @@ void preProcess::getallvalue() {
     std::cout << "lowerBound: " << "x: " << lowerBound.x << " y: " << lowerBound.y << " z: " << lowerBound.z << endl;
     std::cout << "upperBound: " << "x: " << upperBound.x << " y: " << upperBound.y << " z: " << upperBound.z << endl;
 
+}
+
+void preProcess::pseudoColor_manage(string axis_str = "", bool if_one_color = FALSE, int red = 0, int green = 0, int blue = 0)
+{
+    if (if_color == TRUE) {
+        PointShow_reset(TRUE);
+    }
+    else {
+        sudoColor(axis_str, if_one_color, red, green, blue);
+    }
 }

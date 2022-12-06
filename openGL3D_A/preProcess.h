@@ -26,6 +26,7 @@ struct Point3D_data {
 
 class preProcess {
 public:
+	bool if_color = FALSE;
 	int default_color;
 	int maximum_density_color, maximum_density_gray;
 	Point3D_singlepoint lowerBound = { -INFINITY, -INFINITY,-INFINITY };
@@ -55,7 +56,9 @@ public:
 
 	void sudoColor(string axis_str, bool if_one_color, int red, int green, int blue);
 
-	void PointShow_reset();
+	void PointShow_reset(bool only_color);
 
 	void getallvalue();
+
+	void pseudoColor_manage(string axis_str, bool if_one_color, int red, int green, int blue);
 };

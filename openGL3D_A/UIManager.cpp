@@ -219,7 +219,7 @@ bool UIManager::loadPointCloudFile()
 
 			pre.convert3Dpoint(data3D);
 			pre.getallvalue();
-			pre.PointDownsize(0, 4);
+			pre.PointDownsize(0, 1);
 
 			for (int i = 0; i < data3D.thePoint.size; i++) {
 				if (i >= nextPrint)
@@ -320,6 +320,7 @@ bool UIManager::manage() {
 	stringstream coordStream;     // for displaying coordinates on screen
 
 	bool isDisPlayMode = false;
+
 	static int displayedFrameCnt = 0;
 	vector<Campos> keyFrames;
 	Campos currCamPos;
@@ -413,6 +414,8 @@ bool UIManager::manage() {
 			showMenu();
 			break;
 		case FSKEY_C:
+			
+			pre.pseudoColor_manage("x", FALSE, 0, 0, 0);
 			break;
 		case FSKEY_O:
 			fileNameSaved = DrawingUtilNG::getStringFromScreen("Enter name of file to save.",
