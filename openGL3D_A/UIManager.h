@@ -46,7 +46,7 @@ private:
 	//thread
 	std::atomic<bool> startLoadFile = false;
 	std::atomic<bool> isLoadFinish = false;
-	std::atomic<bool> startSaveFile = false;
+	std::atomic<bool> startSaveVedio = false;
 
 	// buttons
 	ButtonCollection mainButtons;

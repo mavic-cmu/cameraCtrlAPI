@@ -179,7 +179,7 @@ void UIManager::threadVideo(UIManager* thisPtr)
 	int windowWidth = thisPtr->winWidth;
 
 	while (1) {
-		if (thisPtr->startSaveFile) {
+		if (thisPtr->startSaveVedio) {
 			cout << "save File start" << endl;
 			cv::Mat cv_pixels(windowHeight, windowWidth, CV_8UC3);
 			for (auto pixels : thisPtr->pixelData) {
@@ -192,7 +192,7 @@ void UIManager::threadVideo(UIManager* thisPtr)
 					thisPtr->outputVideo << cv_pixels;
 			}
 			thisPtr->outputVideo.release();
-			thisPtr->startSaveFile = false;
+			thisPtr->startSaveVedio = false;
 			cout << "save File end" << endl;
 		}
 
@@ -219,7 +219,7 @@ bool UIManager::loadPointCloudFile()
 
 			pre.convert3Dpoint(data3D);
 			pre.getallvalue();
-			pre.PointDownsize(0, 1);
+			pre.PointDownsize(0, 4);
 
 			for (int i = 0; i < data3D.thePoint.size; i++) {
 				if (i >= nextPrint)
@@ -327,6 +327,7 @@ bool UIManager::manage() {
 	Point currCamPoint;
 	int buttonKey;
 	string loadingString = "Loading Point cloud file";
+	string savingVedioString = "Saving vedio cloud file";
 	thread loadPointThread(UIManager::threadEntry, this);
 	thread saveVedioThread(UIManager::threadVideo, this);
 
@@ -374,6 +375,7 @@ bool UIManager::manage() {
 			fileName = DrawingUtilNG::getStringFromScreen("Enter name of file to load.",
 				"Press ENTER when done, ESC to cancel.");
 			startLoadFile = true;
+			showAdvanceMenu = !showAdvanceMenu;
 			//drawLoadingPage();
 			showMenu(); // So that it is "fresh"
 			break;
@@ -500,6 +502,15 @@ bool UIManager::manage() {
 			comicsans.drawText(loadingString , winWidth*0.4, winHeight*0.37, .25);
 		}
 
+		if (startSaveVedio == true) {
+			savingVedioString += ".";
+			if (savingVedioString.size() > 30) {
+				savingVedioString = savingVedioString.substr(0, 25);
+			}
+			comicsans.setColorHSV(0, 1, 1);
+			comicsans.drawText(savingVedioString, winWidth * 0.4, winHeight * 0.37, .25);
+		}
+
 		//display coords of mouse
 		if (leftButton && mouseEvent == FSMOUSEEVENT_MOVE) { // write coords on screen if left button is held down
 			coordStream.str("");  // reset stream
@@ -538,7 +549,7 @@ bool UIManager::manage() {
 			}
 			if (displayedFrameCnt == generatedTraj.size() - 1) {
 				isDisPlayMode = false;
-				startSaveFile = true;
+				startSaveVedio = true;
 				saveVid = false;
 			}
 		}
