@@ -173,6 +173,31 @@ void UIManager::threadEntry(UIManager* thisPtr)
 
 	}
 }
+void UIManager::threadVideo(UIManager* thisPtr)
+{
+	int windowHeight = thisPtr->winHeight;
+	int windowWidth = thisPtr->winWidth;
+
+	while (1) {
+		if (thisPtr->startSaveFile) {
+			cout << "save File start" << endl;
+			cv::Mat cv_pixels(windowHeight, windowWidth, CV_8UC3);
+			for (auto pixels : thisPtr->pixelData) {
+					for (int y = 0; y < windowHeight; y++) for (int x = 0; x < windowWidth; x++)
+					{
+						cv_pixels.at<cv::Vec3b>(y, x)[2] = pixels.at<cv::Vec3b>(windowHeight - y - 1, x)[0];
+						cv_pixels.at<cv::Vec3b>(y, x)[1] = pixels.at<cv::Vec3b>(windowHeight - y - 1, x)[1];
+						cv_pixels.at<cv::Vec3b>(y, x)[0] = pixels.at<cv::Vec3b>(windowHeight - y - 1, x)[2];
+					}
+					thisPtr->outputVideo << cv_pixels;
+			}
+			thisPtr->outputVideo.release();
+			thisPtr->startSaveFile = false;
+			cout << "save File end" << endl;
+		}
+
+	}
+}
 
 bool UIManager::loadPointCloudFile()
 {
@@ -254,6 +279,23 @@ void UIManager::drawLoadingPage(void)
 	}
 }
 
+void UIManager::saveVideo(int windowWidth, int windowHeight)
+{
+
+	cv::Mat pixels(windowHeight, windowWidth, CV_8UC3);
+	glReadPixels(0, 0, windowWidth, windowHeight, GL_RGB, GL_UNSIGNED_BYTE, pixels.data);
+
+	pixelData.push_back(pixels);
+	//cv::Mat cv_pixels(windowHeight, windowWidth, CV_8UC3);
+	//for (int y = 0; y < windowHeight; y++) for (int x = 0; x < windowWidth; x++)
+	//{
+	//	cv_pixels.at<cv::Vec3b>(y, x)[2] = pixels.at<cv::Vec3b>(windowHeight - y - 1, x)[0];
+	//	cv_pixels.at<cv::Vec3b>(y, x)[1] = pixels.at<cv::Vec3b>(windowHeight - y - 1, x)[1];
+	//	cv_pixels.at<cv::Vec3b>(y, x)[0] = pixels.at<cv::Vec3b>(windowHeight - y - 1, x)[2];
+	//}
+	//outputVideo << cv_pixels;
+	//outputVideo << pixels;
+}
 
 void UIManager::drawAdvanceMeau()
 {
@@ -285,6 +327,7 @@ bool UIManager::manage() {
 	int buttonKey;
 	string loadingString = "Loading Point cloud file";
 	thread loadPointThread(UIManager::threadEntry, this);
+	thread saveVedioThread(UIManager::threadVideo, this);
 
 	showMenu();
 	while (!terminate)
@@ -372,6 +415,15 @@ bool UIManager::manage() {
 		case FSKEY_C:
 			break;
 		case FSKEY_O:
+			fileNameSaved = DrawingUtilNG::getStringFromScreen("Enter name of file to save.",
+				"Press ENTER when done, ESC to cancel.");
+			fileNameSaved += ".mp4";
+			outputVideo.open(fileNameSaved, -1, 20.0f, cv::Size(wid, hei), true);
+			saveVid = true;
+			isDisPlayMode = true;
+			showAdvanceMenu = false;
+
+			cout << " Saving Video, do not disturb " << endl;
 			break;
 		}
 
@@ -478,9 +530,13 @@ bool UIManager::manage() {
 			frame.roll = generatedTraj.at(displayedFrameCnt).roll / atan(1.) * 45.;
 			cameraController.setCameraToPos(frame);
 			//cout << cameraController.camera.posToString(frame) << endl;
-
+			if (saveVid) {
+				saveVideo(wid, hei);
+			}
 			if (displayedFrameCnt == generatedTraj.size() - 1) {
 				isDisPlayMode = false;
+				startSaveFile = true;
+				saveVid = false;
 			}
 		}
 		else if (isDisPlayMode == false || displayedFrameCnt == generatedTraj.size() - 1) {
