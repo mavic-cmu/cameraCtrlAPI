@@ -11,6 +11,7 @@
 #include "preProcess.h"
 #include "trajGenerator.h"
 
+#include <opencv2/opencv.hpp>
 class UIManager {
 private:
 	bool simulationIsRunning = false;
@@ -20,6 +21,7 @@ private:
 	float scale = 6.f;
 
 	std::string fileName;
+	std::string fileNameSaved;
 	std::ifstream inFile;
 	char userChoice = 'N';
 	int key = FSKEY_NULL; // just to start it up
@@ -27,6 +29,7 @@ private:
 	bool inEditMode = false;
 	bool showThePoints = false;
 	bool useFillMode = false;
+	bool saveVid = false;
 
 	// for moving a vertex with the mouse
 	int currVertex = -1;
@@ -43,6 +46,7 @@ private:
 	//thread
 	std::atomic<bool> startLoadFile = false;
 	std::atomic<bool> isLoadFinish = false;
+	std::atomic<bool> startSaveFile = false;
 
 	// buttons
 	ButtonCollection mainButtons;
@@ -60,7 +64,8 @@ private:
 	//YsSoundPlayer theSoundPlayer;
 	//YsSoundPlayer::SoundData insideSound;
 	//YsSoundPlayer::SoundData outsideSound;
-
+	cv::VideoWriter outputVideo;
+	std::vector<cv::Mat> pixelData;
 public:
 	UIManager() {};
 
@@ -94,6 +99,10 @@ protected:
 
 	static void threadEntry(UIManager* thisPtr);
 
+	static void threadVideo(UIManager* thisPtr);
+
 	void drawLoadingPage(void);
+
+	void saveVideo(int windowWidth, int windowHeight);
 
 };
